@@ -1341,7 +1341,7 @@ fn parseExtendedAttributeNamedArgList(p: *Parser) Error!void {
 //
 //
 
-/// integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)/
+/// integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)
 fn parse_integer(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
@@ -1350,7 +1350,7 @@ fn parse_integer(p: *Parser) Error!void {
     return error.TODO;
 }
 
-/// decimal     =  -?(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([Ee][+-]?[0-9]+)?|[0-9]+[Ee][+-]?[0-9]+)/
+/// decimal     =  -?(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([Ee][+-]?[0-9]+)?|[0-9]+[Ee][+-]?[0-9]+)
 fn parse_decimal(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
@@ -1359,7 +1359,7 @@ fn parse_decimal(p: *Parser) Error!void {
     return error.TODO;
 }
 
-/// identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*/
+/// identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*
 fn parse_identifier(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
@@ -1368,7 +1368,7 @@ fn parse_identifier(p: *Parser) Error!void {
     return error.TODO;
 }
 
-/// string      =  "[^"]*"/
+/// string      =  "[^"]*"
 fn parse_string(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
@@ -1377,7 +1377,7 @@ fn parse_string(p: *Parser) Error!void {
     return error.TODO;
 }
 
-/// whitespace  =  [\t\n\r ]+/
+/// whitespace  =  [\t\n\r ]+
 fn parse_whitespace(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
@@ -1386,7 +1386,7 @@ fn parse_whitespace(p: *Parser) Error!void {
     return error.TODO;
 }
 
-/// comment     =  \/\/.*|\/\*(.|\n)*?\*\//
+/// comment     =  \/\/.*|\/\*(.|\n)*?\*\/
 fn parse_comment(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
@@ -1395,7 +1395,7 @@ fn parse_comment(p: *Parser) Error!void {
     return error.TODO;
 }
 
-/// other       =  [^\t\n\r 0-9A-Za-z]/
+/// other       =  [^\t\n\r 0-9A-Za-z]
 fn parse_other(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
