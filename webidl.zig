@@ -19,7 +19,7 @@ fn W(comptime T: type) type {
     };
 }
 
-pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !j.Document {
+pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) Error!j.Document {
     //
     const t = tracer.trace(@src(), "", .{});
     defer t.end();
@@ -40,10 +40,12 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !j.Docum
     };
 }
 
+pub const Error = std.mem.Allocator.Error || error{ InvalidIDL, TODO, Null };
+
 /// Definitions ::
 ///     ExtendedAttributeList Definition Definitions
 ///     ε
-fn parseDefinitions(p: *Parser) !void {
+fn parseDefinitions(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -59,7 +61,7 @@ fn parseDefinitions(p: *Parser) !void {
 ///     Enum
 ///     Typedef
 ///     IncludesStatement
-fn parseDefinition(p: *Parser) !void {
+fn parseDefinition(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -93,7 +95,7 @@ fn parseDefinition(p: *Parser) !void {
 ///     stringifier
 ///     typedef
 ///     unrestricted
-fn parseArgumentNameKeyword(p: *Parser) !void {
+fn parseArgumentNameKeyword(p: *Parser) !j.ArgumentNameKeyword {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -104,7 +106,7 @@ fn parseArgumentNameKeyword(p: *Parser) !void {
 /// CallbackOrInterfaceOrMixin ::
 ///     callback CallbackRestOrInterface
 ///     interface InterfaceOrMixin
-fn parseCallbackOrInterfaceOrMixin(p: *Parser) !void {
+fn parseCallbackOrInterfaceOrMixin(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -115,7 +117,7 @@ fn parseCallbackOrInterfaceOrMixin(p: *Parser) !void {
 /// InterfaceOrMixin ::
 ///     InterfaceRest
 ///     MixinRest
-fn parseInterfaceOrMixin(p: *Parser) !void {
+fn parseInterfaceOrMixin(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -125,7 +127,7 @@ fn parseInterfaceOrMixin(p: *Parser) !void {
 
 /// InterfaceRest ::
 ///     identifier Inheritance { InterfaceMembers } ;
-fn parseInterfaceRest(p: *Parser) !void {
+fn parseInterfaceRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -135,7 +137,7 @@ fn parseInterfaceRest(p: *Parser) !void {
 
 /// Partial ::
 ///     partial PartialDefinition
-fn parsePartial(p: *Parser) !void {
+fn parsePartial(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -147,7 +149,7 @@ fn parsePartial(p: *Parser) !void {
 ///     interface PartialInterfaceOrPartialMixin
 ///     PartialDictionary
 ///     Namespace
-fn parsePartialDefinition(p: *Parser) !void {
+fn parsePartialDefinition(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -158,7 +160,7 @@ fn parsePartialDefinition(p: *Parser) !void {
 /// PartialInterfaceOrPartialMixin ::
 ///     PartialInterfaceRest
 ///     MixinRest
-fn parsePartialInterfaceOrPartialMixin(p: *Parser) !void {
+fn parsePartialInterfaceOrPartialMixin(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -168,7 +170,7 @@ fn parsePartialInterfaceOrPartialMixin(p: *Parser) !void {
 
 /// PartialInterfaceRest ::
 ///     identifier { PartialInterfaceMembers } ;
-fn parsePartialInterfaceRest(p: *Parser) !void {
+fn parsePartialInterfaceRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -179,7 +181,7 @@ fn parsePartialInterfaceRest(p: *Parser) !void {
 /// InterfaceMembers ::
 ///     ExtendedAttributeList InterfaceMember InterfaceMembers
 ///     ε
-fn parseInterfaceMembers(p: *Parser) !void {
+fn parseInterfaceMembers(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -190,7 +192,7 @@ fn parseInterfaceMembers(p: *Parser) !void {
 /// InterfaceMember ::
 ///     PartialInterfaceMember
 ///     Constructor
-fn parseInterfaceMember(p: *Parser) !void {
+fn parseInterfaceMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -201,7 +203,7 @@ fn parseInterfaceMember(p: *Parser) !void {
 /// PartialInterfaceMembers ::
 ///     ExtendedAttributeList PartialInterfaceMember PartialInterfaceMembers
 ///     ε
-fn parsePartialInterfaceMembers(p: *Parser) !void {
+fn parsePartialInterfaceMembers(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -221,7 +223,7 @@ fn parsePartialInterfaceMembers(p: *Parser) !void {
 ///     ReadWriteMaplike
 ///     ReadWriteSetlike
 ///     InheritAttribute
-fn parsePartialInterfaceMember(p: *Parser) !void {
+fn parsePartialInterfaceMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -232,7 +234,7 @@ fn parsePartialInterfaceMember(p: *Parser) !void {
 /// Inheritance ::
 ///     : identifier
 ///     ε
-fn parseInheritance(p: *Parser) !void {
+fn parseInheritance(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -242,7 +244,7 @@ fn parseInheritance(p: *Parser) !void {
 
 /// MixinRest ::
 ///     mixin identifier { MixinMembers } ;
-fn parseMixinRest(p: *Parser) !void {
+fn parseMixinRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -253,7 +255,7 @@ fn parseMixinRest(p: *Parser) !void {
 /// MixinMembers ::
 ///     ExtendedAttributeList MixinMember MixinMembers
 ///     ε
-fn parseMixinMembers(p: *Parser) !void {
+fn parseMixinMembers(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -266,7 +268,7 @@ fn parseMixinMembers(p: *Parser) !void {
 ///     RegularOperation
 ///     Stringifier
 ///     OptionalReadOnly AttributeRest
-fn parseMixinMember(p: *Parser) !void {
+fn parseMixinMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -276,7 +278,7 @@ fn parseMixinMember(p: *Parser) !void {
 
 /// IncludesStatement ::
 ///     identifier includes identifier ;
-fn parseIncludesStatement(p: *Parser) !void {
+fn parseIncludesStatement(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -287,7 +289,7 @@ fn parseIncludesStatement(p: *Parser) !void {
 /// CallbackRestOrInterface ::
 ///     CallbackRest
 ///     interface identifier { CallbackInterfaceMembers } ;
-fn parseCallbackRestOrInterface(p: *Parser) !void {
+fn parseCallbackRestOrInterface(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -298,7 +300,7 @@ fn parseCallbackRestOrInterface(p: *Parser) !void {
 /// CallbackInterfaceMembers ::
 ///     ExtendedAttributeList CallbackInterfaceMember CallbackInterfaceMembers
 ///     ε
-fn parseCallbackInterfaceMembers(p: *Parser) !void {
+fn parseCallbackInterfaceMembers(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -309,7 +311,7 @@ fn parseCallbackInterfaceMembers(p: *Parser) !void {
 /// CallbackInterfaceMember ::
 ///     Const
 ///     RegularOperation
-fn parseCallbackInterfaceMember(p: *Parser) !void {
+fn parseCallbackInterfaceMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -319,7 +321,7 @@ fn parseCallbackInterfaceMember(p: *Parser) !void {
 
 /// Const ::
 ///     const ConstType identifier = ConstValue ;
-fn parseConst(p: *Parser) !void {
+fn parseConst(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -331,7 +333,7 @@ fn parseConst(p: *Parser) !void {
 ///     BooleanLiteral
 ///     FloatLiteral
 ///     integer
-fn parseConstValue(p: *Parser) !void {
+fn parseConstValue(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -342,7 +344,7 @@ fn parseConstValue(p: *Parser) !void {
 /// BooleanLiteral ::
 ///     true
 ///     false
-fn parseBooleanLiteral(p: *Parser) !void {
+fn parseBooleanLiteral(p: *Parser) !bool {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -355,7 +357,7 @@ fn parseBooleanLiteral(p: *Parser) !void {
 ///     -Infinity
 ///     Infinity
 ///     NaN
-fn parseFloatLiteral(p: *Parser) !void {
+fn parseFloatLiteral(p: *Parser) !f32 {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -366,7 +368,7 @@ fn parseFloatLiteral(p: *Parser) !void {
 /// ConstType ::
 ///     PrimitiveType
 ///     identifier
-fn parseConstType(p: *Parser) !void {
+fn parseConstType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -376,7 +378,7 @@ fn parseConstType(p: *Parser) !void {
 
 /// ReadOnlyMember ::
 ///     readonly ReadOnlyMemberRest
-fn parseReadOnlyMember(p: *Parser) !void {
+fn parseReadOnlyMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -388,7 +390,7 @@ fn parseReadOnlyMember(p: *Parser) !void {
 ///     AttributeRest
 ///     MaplikeRest
 ///     SetlikeRest
-fn parseReadOnlyMemberRest(p: *Parser) !void {
+fn parseReadOnlyMemberRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -398,7 +400,7 @@ fn parseReadOnlyMemberRest(p: *Parser) !void {
 
 /// ReadWriteAttribute ::
 ///     AttributeRest
-fn parseReadWriteAttribute(p: *Parser) !void {
+fn parseReadWriteAttribute(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -408,7 +410,7 @@ fn parseReadWriteAttribute(p: *Parser) !void {
 
 /// InheritAttribute ::
 ///     inherit AttributeRest
-fn parseInheritAttribute(p: *Parser) !void {
+fn parseInheritAttribute(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -418,7 +420,7 @@ fn parseInheritAttribute(p: *Parser) !void {
 
 /// AttributeRest ::
 ///     attribute TypeWithExtendedAttributes AttributeName ;
-fn parseAttributeRest(p: *Parser) !void {
+fn parseAttributeRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -429,7 +431,7 @@ fn parseAttributeRest(p: *Parser) !void {
 /// AttributeName ::
 ///     AttributeNameKeyword
 ///     identifier
-fn parseAttributeName(p: *Parser) !void {
+fn parseAttributeName(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -440,7 +442,7 @@ fn parseAttributeName(p: *Parser) !void {
 /// AttributeNameKeyword ::
 ///     async
 ///     required
-fn parseAttributeNameKeyword(p: *Parser) !void {
+fn parseAttributeNameKeyword(p: *Parser) !j.AttributeNameKeyword {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -451,7 +453,7 @@ fn parseAttributeNameKeyword(p: *Parser) !void {
 /// OptionalReadOnly ::
 ///     readonly
 ///     ε
-fn parseOptionalReadOnly(p: *Parser) !void {
+fn parseOptionalReadOnly(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -466,7 +468,7 @@ fn parseOptionalReadOnly(p: *Parser) !void {
 ///     { }
 ///     null
 ///     undefined
-fn parseDefaultValue(p: *Parser) !void {
+fn parseDefaultValue(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -477,7 +479,7 @@ fn parseDefaultValue(p: *Parser) !void {
 /// Operation ::
 ///     RegularOperation
 ///     SpecialOperation
-fn parseOperation(p: *Parser) !void {
+fn parseOperation(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -487,7 +489,7 @@ fn parseOperation(p: *Parser) !void {
 
 /// RegularOperation ::
 ///     Type OperationRest
-fn parseRegularOperation(p: *Parser) !void {
+fn parseRegularOperation(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -497,7 +499,7 @@ fn parseRegularOperation(p: *Parser) !void {
 
 /// SpecialOperation ::
 ///     Special RegularOperation
-fn parseSpecialOperation(p: *Parser) !void {
+fn parseSpecialOperation(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -509,7 +511,7 @@ fn parseSpecialOperation(p: *Parser) !void {
 ///     getter
 ///     setter
 ///     deleter
-fn parseSpecial(p: *Parser) !void {
+fn parseSpecial(p: *Parser) !j.Special {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -519,7 +521,7 @@ fn parseSpecial(p: *Parser) !void {
 
 /// OperationRest ::
 ///     OptionalOperationName ( ArgumentList ) ;
-fn parseOperationRest(p: *Parser) !void {
+fn parseOperationRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -530,7 +532,7 @@ fn parseOperationRest(p: *Parser) !void {
 /// OptionalOperationName ::
 ///     OperationName
 ///     ε
-fn parseOptionalOperationName(p: *Parser) !void {
+fn parseOptionalOperationName(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -541,7 +543,7 @@ fn parseOptionalOperationName(p: *Parser) !void {
 /// OperationName ::
 ///     OperationNameKeyword
 ///     identifier
-fn parseOperationName(p: *Parser) !void {
+fn parseOperationName(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -551,7 +553,7 @@ fn parseOperationName(p: *Parser) !void {
 
 /// OperationNameKeyword ::
 ///     includes
-fn parseOperationNameKeyword(p: *Parser) !void {
+fn parseOperationNameKeyword(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -562,18 +564,10 @@ fn parseOperationNameKeyword(p: *Parser) !void {
 /// ArgumentList ::
 ///     Argument Arguments
 ///     ε
-fn parseArgumentList(p: *Parser) !void {
-    //
-    const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
-    defer t.end();
-
-    return error.TODO;
-}
-
 /// Arguments ::
 ///     , Argument Arguments
 ///     ε
-fn parseArguments(p: *Parser) !void {
+fn parseArgumentList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -583,7 +577,7 @@ fn parseArguments(p: *Parser) !void {
 
 /// Argument ::
 ///     ExtendedAttributeList ArgumentRest
-fn parseArgument(p: *Parser) !void {
+fn parseArgument(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -594,7 +588,7 @@ fn parseArgument(p: *Parser) !void {
 /// ArgumentRest ::
 ///     optional TypeWithExtendedAttributes ArgumentName Default
 ///     Type Ellipsis ArgumentName
-fn parseArgumentRest(p: *Parser) !void {
+fn parseArgumentRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -605,7 +599,7 @@ fn parseArgumentRest(p: *Parser) !void {
 /// ArgumentName ::
 ///     ArgumentNameKeyword
 ///     identifier
-fn parseArgumentName(p: *Parser) !void {
+fn parseArgumentName(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -616,7 +610,7 @@ fn parseArgumentName(p: *Parser) !void {
 /// Ellipsis ::
 ///     ...
 ///     ε
-fn parseEllipsis(p: *Parser) !void {
+fn parseEllipsis(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -626,7 +620,7 @@ fn parseEllipsis(p: *Parser) !void {
 
 /// Constructor ::
 ///     constructor ( ArgumentList ) ;
-fn parseConstructor(p: *Parser) !void {
+fn parseConstructor(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -636,7 +630,7 @@ fn parseConstructor(p: *Parser) !void {
 
 /// Stringifier ::
 ///     stringifier StringifierRest
-fn parseStringifier(p: *Parser) !void {
+fn parseStringifier(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -647,7 +641,7 @@ fn parseStringifier(p: *Parser) !void {
 /// StringifierRest ::
 ///     OptionalReadOnly AttributeRest
 ///     ;
-fn parseStringifierRest(p: *Parser) !void {
+fn parseStringifierRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -657,7 +651,7 @@ fn parseStringifierRest(p: *Parser) !void {
 
 /// StaticMember ::
 ///     static StaticMemberRest
-fn parseStaticMember(p: *Parser) !void {
+fn parseStaticMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -668,7 +662,7 @@ fn parseStaticMember(p: *Parser) !void {
 /// StaticMemberRest ::
 ///     OptionalReadOnly AttributeRest
 ///     RegularOperation
-fn parseStaticMemberRest(p: *Parser) !void {
+fn parseStaticMemberRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -678,7 +672,7 @@ fn parseStaticMemberRest(p: *Parser) !void {
 
 /// Iterable ::
 ///     iterable < TypeWithExtendedAttributes OptionalType > ;
-fn parseIterable(p: *Parser) !void {
+fn parseIterable(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -689,7 +683,7 @@ fn parseIterable(p: *Parser) !void {
 /// OptionalType ::
 ///     , TypeWithExtendedAttributes
 ///     ε
-fn parseOptionalType(p: *Parser) !void {
+fn parseOptionalType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -699,7 +693,7 @@ fn parseOptionalType(p: *Parser) !void {
 
 /// AsyncIterable ::
 ///     async iterable < TypeWithExtendedAttributes OptionalType > OptionalArgumentList ;
-fn parseAsyncIterable(p: *Parser) !void {
+fn parseAsyncIterable(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -710,7 +704,7 @@ fn parseAsyncIterable(p: *Parser) !void {
 /// OptionalArgumentList ::
 ///     ( ArgumentList )
 ///     ε
-fn parseOptionalArgumentList(p: *Parser) !void {
+fn parseOptionalArgumentList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -720,7 +714,7 @@ fn parseOptionalArgumentList(p: *Parser) !void {
 
 /// ReadWriteMaplike ::
 ///     MaplikeRest
-fn parseReadWriteMaplike(p: *Parser) !void {
+fn parseReadWriteMaplike(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -730,7 +724,7 @@ fn parseReadWriteMaplike(p: *Parser) !void {
 
 /// MaplikeRest ::
 ///     maplike < TypeWithExtendedAttributes , TypeWithExtendedAttributes > ;
-fn parseMaplikeRest(p: *Parser) !void {
+fn parseMaplikeRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -740,7 +734,7 @@ fn parseMaplikeRest(p: *Parser) !void {
 
 /// ReadWriteSetlike ::
 ///     SetlikeRest
-fn parseReadWriteSetlike(p: *Parser) !void {
+fn parseReadWriteSetlike(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -750,7 +744,7 @@ fn parseReadWriteSetlike(p: *Parser) !void {
 
 /// SetlikeRest ::
 ///     setlike < TypeWithExtendedAttributes > ;
-fn parseSetlikeRest(p: *Parser) !void {
+fn parseSetlikeRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -760,7 +754,7 @@ fn parseSetlikeRest(p: *Parser) !void {
 
 /// Namespace ::
 ///     namespace identifier { NamespaceMembers } ;
-fn parseNamespace(p: *Parser) !void {
+fn parseNamespace(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -771,7 +765,7 @@ fn parseNamespace(p: *Parser) !void {
 /// NamespaceMembers ::
 ///     ExtendedAttributeList NamespaceMember NamespaceMembers
 ///     ε
-fn parseNamespaceMembers(p: *Parser) !void {
+fn parseNamespaceMembers(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -783,7 +777,7 @@ fn parseNamespaceMembers(p: *Parser) !void {
 ///     RegularOperation
 ///     readonly AttributeRest
 ///     Const
-fn parseNamespaceMember(p: *Parser) !void {
+fn parseNamespaceMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -793,7 +787,7 @@ fn parseNamespaceMember(p: *Parser) !void {
 
 /// Dictionary ::
 ///     dictionary identifier Inheritance { DictionaryMembers } ;
-fn parseDictionary(p: *Parser) !void {
+fn parseDictionary(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -804,7 +798,7 @@ fn parseDictionary(p: *Parser) !void {
 /// DictionaryMembers ::
 ///     DictionaryMember DictionaryMembers
 ///     ε
-fn parseDictionaryMembers(p: *Parser) !void {
+fn parseDictionaryMembers(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -814,7 +808,7 @@ fn parseDictionaryMembers(p: *Parser) !void {
 
 /// DictionaryMember ::
 ///     ExtendedAttributeList DictionaryMemberRest
-fn parseDictionaryMember(p: *Parser) !void {
+fn parseDictionaryMember(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -825,7 +819,7 @@ fn parseDictionaryMember(p: *Parser) !void {
 /// DictionaryMemberRest ::
 ///     required TypeWithExtendedAttributes identifier ;
 ///     Type identifier Default ;
-fn parseDictionaryMemberRest(p: *Parser) !void {
+fn parseDictionaryMemberRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -835,7 +829,7 @@ fn parseDictionaryMemberRest(p: *Parser) !void {
 
 /// PartialDictionary ::
 ///     dictionary identifier { DictionaryMembers } ;
-fn parsePartialDictionary(p: *Parser) !void {
+fn parsePartialDictionary(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -846,7 +840,7 @@ fn parsePartialDictionary(p: *Parser) !void {
 /// Default ::
 ///     = DefaultValue
 ///     ε
-fn parseDefault(p: *Parser) !void {
+fn parseDefault(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -856,7 +850,7 @@ fn parseDefault(p: *Parser) !void {
 
 /// Enum ::
 ///     enum identifier { EnumValueList } ;
-fn parseEnum(p: *Parser) !void {
+fn parseEnum(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -866,7 +860,7 @@ fn parseEnum(p: *Parser) !void {
 
 /// EnumValueList ::
 ///     string EnumValueListComma
-fn parseEnumValueList(p: *Parser) !void {
+fn parseEnumValueList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -877,7 +871,7 @@ fn parseEnumValueList(p: *Parser) !void {
 /// EnumValueListComma ::
 ///     , EnumValueListString
 ///     ε
-fn parseEnumValueListComma(p: *Parser) !void {
+fn parseEnumValueListComma(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -888,7 +882,7 @@ fn parseEnumValueListComma(p: *Parser) !void {
 /// EnumValueListString ::
 ///     string EnumValueListComma
 ///     ε
-fn parseEnumValueListString(p: *Parser) !void {
+fn parseEnumValueListString(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -898,7 +892,7 @@ fn parseEnumValueListString(p: *Parser) !void {
 
 /// CallbackRest ::
 ///     identifier = Type ( ArgumentList ) ;
-fn parseCallbackRest(p: *Parser) !void {
+fn parseCallbackRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -908,7 +902,7 @@ fn parseCallbackRest(p: *Parser) !void {
 
 /// Typedef ::
 ///     typedef TypeWithExtendedAttributes identifier ;
-fn parseTypedef(p: *Parser) !void {
+fn parseTypedef(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -919,7 +913,7 @@ fn parseTypedef(p: *Parser) !void {
 /// Type ::
 ///     SingleType
 ///     UnionType Null
-fn parseType(p: *Parser) !void {
+fn parseType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -929,7 +923,7 @@ fn parseType(p: *Parser) !void {
 
 /// TypeWithExtendedAttributes ::
 ///     ExtendedAttributeList Type
-fn parseTypeWithExtendedAttributes(p: *Parser) !void {
+fn parseTypeWithExtendedAttributes(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -941,7 +935,7 @@ fn parseTypeWithExtendedAttributes(p: *Parser) !void {
 ///     DistinguishableType
 ///     any
 ///     PromiseType
-fn parseSingleType(p: *Parser) !void {
+fn parseSingleType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -951,7 +945,7 @@ fn parseSingleType(p: *Parser) !void {
 
 /// UnionType ::
 ///     ( UnionMemberType or UnionMemberType UnionMemberTypes )
-fn parseUnionType(p: *Parser) !void {
+fn parseUnionType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -962,7 +956,7 @@ fn parseUnionType(p: *Parser) !void {
 /// UnionMemberType ::
 ///     ExtendedAttributeList DistinguishableType
 ///     UnionType Null
-fn parseUnionMemberType(p: *Parser) !void {
+fn parseUnionMemberType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -973,7 +967,7 @@ fn parseUnionMemberType(p: *Parser) !void {
 /// UnionMemberTypes ::
 ///     or UnionMemberType UnionMemberTypes
 ///     ε
-fn parseUnionMemberTypes(p: *Parser) !void {
+fn parseUnionMemberTypes(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -993,7 +987,7 @@ fn parseUnionMemberTypes(p: *Parser) !void {
 ///     ObservableArray < TypeWithExtendedAttributes > Null
 ///     RecordType Null
 ///     undefined Null
-fn parseDistinguishableType(p: *Parser) !void {
+fn parseDistinguishableType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1008,7 +1002,7 @@ fn parseDistinguishableType(p: *Parser) !void {
 ///     byte
 ///     octet
 ///     bigint
-fn parsePrimitiveType(p: *Parser) !void {
+fn parsePrimitiveType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1019,7 +1013,7 @@ fn parsePrimitiveType(p: *Parser) !void {
 /// UnrestrictedFloatType ::
 ///     unrestricted FloatType
 ///     FloatType
-fn parseUnrestrictedFloatType(p: *Parser) !void {
+fn parseUnrestrictedFloatType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1030,7 +1024,7 @@ fn parseUnrestrictedFloatType(p: *Parser) !void {
 /// FloatType ::
 ///     float
 ///     double
-fn parseFloatType(p: *Parser) !void {
+fn parseFloatType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1041,7 +1035,7 @@ fn parseFloatType(p: *Parser) !void {
 /// UnsignedIntegerType ::
 ///     unsigned IntegerType
 ///     IntegerType
-fn parseUnsignedIntegerType(p: *Parser) !void {
+fn parseUnsignedIntegerType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1052,7 +1046,7 @@ fn parseUnsignedIntegerType(p: *Parser) !void {
 /// IntegerType ::
 ///     short
 ///     long OptionalLong
-fn parseIntegerType(p: *Parser) !void {
+fn parseIntegerType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1063,7 +1057,7 @@ fn parseIntegerType(p: *Parser) !void {
 /// OptionalLong ::
 ///     long
 ///     ε
-fn parseOptionalLong(p: *Parser) !void {
+fn parseOptionalLong(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1075,7 +1069,7 @@ fn parseOptionalLong(p: *Parser) !void {
 ///     ByteString
 ///     DOMString
 ///     USVString
-fn parseStringType(p: *Parser) !void {
+fn parseStringType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1085,7 +1079,7 @@ fn parseStringType(p: *Parser) !void {
 
 /// PromiseType ::
 ///     Promise < Type >
-fn parsePromiseType(p: *Parser) !void {
+fn parsePromiseType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1095,7 +1089,7 @@ fn parsePromiseType(p: *Parser) !void {
 
 /// RecordType ::
 ///     record < StringType , TypeWithExtendedAttributes >
-fn parseRecordType(p: *Parser) !void {
+fn parseRecordType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1106,7 +1100,7 @@ fn parseRecordType(p: *Parser) !void {
 /// Null ::
 ///     ?
 ///     ε
-fn parseNull(p: *Parser) !void {
+fn parseNull(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1129,7 +1123,7 @@ fn parseNull(p: *Parser) !void {
 ///     BigUint64Array
 ///     Float32Array
 ///     Float64Array
-fn parseBufferRelatedType(p: *Parser) !void {
+fn parseBufferRelatedType(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1140,7 +1134,7 @@ fn parseBufferRelatedType(p: *Parser) !void {
 /// ExtendedAttributeList ::
 ///     [ ExtendedAttribute ExtendedAttributes ]
 ///     ε
-fn parseExtendedAttributeList(p: *Parser) !void {
+fn parseExtendedAttributeList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1151,7 +1145,7 @@ fn parseExtendedAttributeList(p: *Parser) !void {
 /// ExtendedAttributes ::
 ///     , ExtendedAttribute ExtendedAttributes
 ///     ε
-fn parseExtendedAttributes(p: *Parser) !void {
+fn parseExtendedAttributes(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1164,7 +1158,7 @@ fn parseExtendedAttributes(p: *Parser) !void {
 ///     [ ExtendedAttributeInner ] ExtendedAttributeRest
 ///     { ExtendedAttributeInner } ExtendedAttributeRest
 ///     Other ExtendedAttributeRest
-fn parseExtendedAttribute(p: *Parser) !void {
+fn parseExtendedAttribute(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1175,7 +1169,7 @@ fn parseExtendedAttribute(p: *Parser) !void {
 /// ExtendedAttributeRest ::
 ///     ExtendedAttribute
 ///     ε
-fn parseExtendedAttributeRest(p: *Parser) !void {
+fn parseExtendedAttributeRest(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1189,7 +1183,7 @@ fn parseExtendedAttributeRest(p: *Parser) !void {
 ///     { ExtendedAttributeInner } ExtendedAttributeInner
 ///     OtherOrComma ExtendedAttributeInner
 ///     ε
-fn parseExtendedAttributeInner(p: *Parser) !void {
+fn parseExtendedAttributeInner(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1244,7 +1238,7 @@ fn parseExtendedAttributeInner(p: *Parser) !void {
 ///     undefined
 ///     ArgumentNameKeyword
 ///     BufferRelatedType
-fn parseOther(p: *Parser) !void {
+fn parseOther(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1255,7 +1249,7 @@ fn parseOther(p: *Parser) !void {
 /// OtherOrComma ::
 ///     Other
 ///     ,
-fn parseOtherOrComma(p: *Parser) !void {
+fn parseOtherOrComma(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1265,7 +1259,7 @@ fn parseOtherOrComma(p: *Parser) !void {
 
 /// IdentifierList ::
 ///     identifier Identifiers
-fn parseIdentifierList(p: *Parser) !void {
+fn parseIdentifierList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1276,7 +1270,7 @@ fn parseIdentifierList(p: *Parser) !void {
 /// Identifiers ::
 ///     , identifier Identifiers
 ///     ε
-fn parseIdentifiers(p: *Parser) !void {
+fn parseIdentifiers(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1286,7 +1280,7 @@ fn parseIdentifiers(p: *Parser) !void {
 
 /// ExtendedAttributeNoArgs ::
 ///     identifier
-fn parseExtendedAttributeNoArgs(p: *Parser) !void {
+fn parseExtendedAttributeNoArgs(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1296,7 +1290,7 @@ fn parseExtendedAttributeNoArgs(p: *Parser) !void {
 
 /// ExtendedAttributeArgList ::
 ///     identifier ( ArgumentList )
-fn parseExtendedAttributeArgList(p: *Parser) !void {
+fn parseExtendedAttributeArgList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1306,7 +1300,7 @@ fn parseExtendedAttributeArgList(p: *Parser) !void {
 
 /// ExtendedAttributeIdent ::
 ///     identifier = identifier
-fn parseExtendedAttributeIdent(p: *Parser) !void {
+fn parseExtendedAttributeIdent(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1316,7 +1310,7 @@ fn parseExtendedAttributeIdent(p: *Parser) !void {
 
 /// ExtendedAttributeWildcard ::
 ///     identifier = *
-fn parseExtendedAttributeWildcard(p: *Parser) !void {
+fn parseExtendedAttributeWildcard(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1326,7 +1320,7 @@ fn parseExtendedAttributeWildcard(p: *Parser) !void {
 
 /// ExtendedAttributeIdentList ::
 ///     identifier = ( IdentifierList )
-fn parseExtendedAttributeIdentList(p: *Parser) !void {
+fn parseExtendedAttributeIdentList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1336,7 +1330,7 @@ fn parseExtendedAttributeIdentList(p: *Parser) !void {
 
 /// ExtendedAttributeNamedArgList ::
 ///     identifier = identifier ( ArgumentList )
-fn parseExtendedAttributeNamedArgList(p: *Parser) !void {
+fn parseExtendedAttributeNamedArgList(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1348,7 +1342,7 @@ fn parseExtendedAttributeNamedArgList(p: *Parser) !void {
 //
 
 /// integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)/
-fn parse_integer(p: *Parser) !void {
+fn parse_integer(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1357,7 +1351,7 @@ fn parse_integer(p: *Parser) !void {
 }
 
 /// decimal     =  -?(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([Ee][+-]?[0-9]+)?|[0-9]+[Ee][+-]?[0-9]+)/
-fn parse_decimal(p: *Parser) !void {
+fn parse_decimal(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1366,7 +1360,7 @@ fn parse_decimal(p: *Parser) !void {
 }
 
 /// identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*/
-fn parse_identifier(p: *Parser) !void {
+fn parse_identifier(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1375,7 +1369,7 @@ fn parse_identifier(p: *Parser) !void {
 }
 
 /// string      =  "[^"]*"/
-fn parse_string(p: *Parser) !void {
+fn parse_string(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1384,7 +1378,7 @@ fn parse_string(p: *Parser) !void {
 }
 
 /// whitespace  =  [\t\n\r ]+/
-fn parse_whitespace(p: *Parser) !void {
+fn parse_whitespace(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1393,7 +1387,7 @@ fn parse_whitespace(p: *Parser) !void {
 }
 
 /// comment     =  \/\/.*|\/\*(.|\n)*?\*\//
-fn parse_comment(p: *Parser) !void {
+fn parse_comment(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
@@ -1402,7 +1396,7 @@ fn parse_comment(p: *Parser) !void {
 }
 
 /// other       =  [^\t\n\r 0-9A-Za-z]/
-fn parse_other(p: *Parser) !void {
+fn parse_other(p: *Parser) Error!void {
     //
     const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
     defer t.end();
