@@ -1403,3 +1403,26 @@ fn parse_other(p: *Parser) Error!void {
 
     return error.TODO;
 }
+
+//
+//
+
+fn parse__symbol(p: *Parser, comptime c: u8) Error!void {
+    //
+    const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
+    defer t.end();
+
+    _ = c;
+
+    return error.TODO;
+}
+
+fn parse__word(p: *Parser, comptime str: string) Error!void {
+    //
+    const t = tracer.trace(@src(), "({d})", .{p.parser.idx});
+    defer t.end();
+
+    _ = str;
+
+    return error.TODO;
+}
