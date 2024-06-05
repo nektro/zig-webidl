@@ -20,541 +20,541 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
     @panic("TODO");
 }
 
-/// Definitions ::
-///     ExtendedAttributeList Definition Definitions
-///     ε
-
-/// Definition ::
-///     CallbackOrInterfaceOrMixin
-///     Namespace
-///     Partial
-///     Dictionary
-///     Enum
-///     Typedef
-///     IncludesStatement
-
-/// ArgumentNameKeyword ::
-///     async
-///     attribute
-///     callback
-///     const
-///     constructor
-///     deleter
-///     dictionary
-///     enum
-///     getter
-///     includes
-///     inherit
-///     interface
-///     iterable
-///     maplike
-///     mixin
-///     namespace
-///     partial
-///     readonly
-///     required
-///     setlike
-///     setter
-///     static
-///     stringifier
-///     typedef
-///     unrestricted
-
-/// CallbackOrInterfaceOrMixin ::
-///     callback CallbackRestOrInterface
-///     interface InterfaceOrMixin
-
-/// InterfaceOrMixin ::
-///     InterfaceRest
-///     MixinRest
-
-/// InterfaceRest ::
-///     identifier Inheritance { InterfaceMembers } ;
-
-/// Partial ::
-///     partial PartialDefinition
-
-/// PartialDefinition ::
-///     interface PartialInterfaceOrPartialMixin
-///     PartialDictionary
-///     Namespace
-
-/// PartialInterfaceOrPartialMixin ::
-///     PartialInterfaceRest
-///     MixinRest
-
-/// PartialInterfaceRest ::
-///     identifier { PartialInterfaceMembers } ;
-
-/// InterfaceMembers ::
-///     ExtendedAttributeList InterfaceMember InterfaceMembers
-///     ε
-
-/// InterfaceMember ::
-///     PartialInterfaceMember
-///     Constructor
-
-/// PartialInterfaceMembers ::
-///     ExtendedAttributeList PartialInterfaceMember PartialInterfaceMembers
-///     ε
-
-/// PartialInterfaceMember ::
-///     Const
-///     Operation
-///     Stringifier
-///     StaticMember
-///     Iterable
-///     AsyncIterable
-///     ReadOnlyMember
-///     ReadWriteAttribute
-///     ReadWriteMaplike
-///     ReadWriteSetlike
-///     InheritAttribute
-
-/// Inheritance ::
-///     : identifier
-///     ε
-
-/// MixinRest ::
-///     mixin identifier { MixinMembers } ;
-
-/// MixinMembers ::
-///     ExtendedAttributeList MixinMember MixinMembers
-///     ε
-
-/// MixinMember ::
-///     Const
-///     RegularOperation
-///     Stringifier
-///     OptionalReadOnly AttributeRest
-
-/// IncludesStatement ::
-///     identifier includes identifier ;
-
-/// CallbackRestOrInterface ::
-///     CallbackRest
-///     interface identifier { CallbackInterfaceMembers } ;
-
-/// CallbackInterfaceMembers ::
-///     ExtendedAttributeList CallbackInterfaceMember CallbackInterfaceMembers
-///     ε
-
-/// CallbackInterfaceMember ::
-///     Const
-///     RegularOperation
-
-/// Const ::
-///     const ConstType identifier = ConstValue ;
-
-/// ConstValue ::
-///     BooleanLiteral
-///     FloatLiteral
-///     integer
-
-/// BooleanLiteral ::
-///     true
-///     false
-
-/// FloatLiteral ::
-///     decimal
-///     -Infinity
-///     Infinity
-///     NaN
+// Definitions ::
+//     ExtendedAttributeList Definition Definitions
+//     ε
+
+// Definition ::
+//     CallbackOrInterfaceOrMixin
+//     Namespace
+//     Partial
+//     Dictionary
+//     Enum
+//     Typedef
+//     IncludesStatement
+
+// ArgumentNameKeyword ::
+//     async
+//     attribute
+//     callback
+//     const
+//     constructor
+//     deleter
+//     dictionary
+//     enum
+//     getter
+//     includes
+//     inherit
+//     interface
+//     iterable
+//     maplike
+//     mixin
+//     namespace
+//     partial
+//     readonly
+//     required
+//     setlike
+//     setter
+//     static
+//     stringifier
+//     typedef
+//     unrestricted
+
+// CallbackOrInterfaceOrMixin ::
+//     callback CallbackRestOrInterface
+//     interface InterfaceOrMixin
+
+// InterfaceOrMixin ::
+//     InterfaceRest
+//     MixinRest
+
+// InterfaceRest ::
+//     identifier Inheritance { InterfaceMembers } ;
+
+// Partial ::
+//     partial PartialDefinition
+
+// PartialDefinition ::
+//     interface PartialInterfaceOrPartialMixin
+//     PartialDictionary
+//     Namespace
+
+// PartialInterfaceOrPartialMixin ::
+//     PartialInterfaceRest
+//     MixinRest
+
+// PartialInterfaceRest ::
+//     identifier { PartialInterfaceMembers } ;
+
+// InterfaceMembers ::
+//     ExtendedAttributeList InterfaceMember InterfaceMembers
+//     ε
+
+// InterfaceMember ::
+//     PartialInterfaceMember
+//     Constructor
+
+// PartialInterfaceMembers ::
+//     ExtendedAttributeList PartialInterfaceMember PartialInterfaceMembers
+//     ε
+
+// PartialInterfaceMember ::
+//     Const
+//     Operation
+//     Stringifier
+//     StaticMember
+//     Iterable
+//     AsyncIterable
+//     ReadOnlyMember
+//     ReadWriteAttribute
+//     ReadWriteMaplike
+//     ReadWriteSetlike
+//     InheritAttribute
+
+// Inheritance ::
+//     : identifier
+//     ε
+
+// MixinRest ::
+//     mixin identifier { MixinMembers } ;
+
+// MixinMembers ::
+//     ExtendedAttributeList MixinMember MixinMembers
+//     ε
+
+// MixinMember ::
+//     Const
+//     RegularOperation
+//     Stringifier
+//     OptionalReadOnly AttributeRest
+
+// IncludesStatement ::
+//     identifier includes identifier ;
+
+// CallbackRestOrInterface ::
+//     CallbackRest
+//     interface identifier { CallbackInterfaceMembers } ;
+
+// CallbackInterfaceMembers ::
+//     ExtendedAttributeList CallbackInterfaceMember CallbackInterfaceMembers
+//     ε
+
+// CallbackInterfaceMember ::
+//     Const
+//     RegularOperation
+
+// Const ::
+//     const ConstType identifier = ConstValue ;
+
+// ConstValue ::
+//     BooleanLiteral
+//     FloatLiteral
+//     integer
+
+// BooleanLiteral ::
+//     true
+//     false
+
+// FloatLiteral ::
+//     decimal
+//     -Infinity
+//     Infinity
+//     NaN
 
-/// ConstType ::
-///     PrimitiveType
-///     identifier
+// ConstType ::
+//     PrimitiveType
+//     identifier
 
-/// ReadOnlyMember ::
-///     readonly ReadOnlyMemberRest
+// ReadOnlyMember ::
+//     readonly ReadOnlyMemberRest
 
-/// ReadOnlyMemberRest ::
-///     AttributeRest
-///     MaplikeRest
-///     SetlikeRest
+// ReadOnlyMemberRest ::
+//     AttributeRest
+//     MaplikeRest
+//     SetlikeRest
 
-/// ReadWriteAttribute ::
-///     AttributeRest
+// ReadWriteAttribute ::
+//     AttributeRest
 
-/// InheritAttribute ::
-///     inherit AttributeRest
+// InheritAttribute ::
+//     inherit AttributeRest
 
-/// AttributeRest ::
-///     attribute TypeWithExtendedAttributes AttributeName ;
+// AttributeRest ::
+//     attribute TypeWithExtendedAttributes AttributeName ;
 
-/// AttributeName ::
-///     AttributeNameKeyword
-///     identifier
+// AttributeName ::
+//     AttributeNameKeyword
+//     identifier
 
-/// AttributeNameKeyword ::
-///     async
-///     required
+// AttributeNameKeyword ::
+//     async
+//     required
 
-/// OptionalReadOnly ::
-///     readonly
-///     ε
+// OptionalReadOnly ::
+//     readonly
+//     ε
 
-/// DefaultValue ::
-///     ConstValue
-///     string
-///     [ ]
-///     { }
-///     null
-///     undefined
+// DefaultValue ::
+//     ConstValue
+//     string
+//     [ ]
+//     { }
+//     null
+//     undefined
 
-/// Operation ::
-///     RegularOperation
-///     SpecialOperation
+// Operation ::
+//     RegularOperation
+//     SpecialOperation
 
-/// RegularOperation ::
-///     Type OperationRest
+// RegularOperation ::
+//     Type OperationRest
 
-/// SpecialOperation ::
-///     Special RegularOperation
+// SpecialOperation ::
+//     Special RegularOperation
 
-/// Special ::
-///     getter
-///     setter
-///     deleter
+// Special ::
+//     getter
+//     setter
+//     deleter
 
-/// OperationRest ::
-///     OptionalOperationName ( ArgumentList ) ;
+// OperationRest ::
+//     OptionalOperationName ( ArgumentList ) ;
 
-/// OptionalOperationName ::
-///     OperationName
-///     ε
+// OptionalOperationName ::
+//     OperationName
+//     ε
 
-/// OperationName ::
-///     OperationNameKeyword
-///     identifier
+// OperationName ::
+//     OperationNameKeyword
+//     identifier
 
-/// OperationNameKeyword ::
-///     includes
+// OperationNameKeyword ::
+//     includes
 
-/// ArgumentList ::
-///     Argument Arguments
-///     ε
-/// Arguments ::
-///     , Argument Arguments
-///     ε
+// ArgumentList ::
+//     Argument Arguments
+//     ε
+// Arguments ::
+//     , Argument Arguments
+//     ε
 
-/// Argument ::
-///     ExtendedAttributeList ArgumentRest
+// Argument ::
+//     ExtendedAttributeList ArgumentRest
 
-/// ArgumentRest ::
-///     optional TypeWithExtendedAttributes ArgumentName Default
-///     Type Ellipsis ArgumentName
+// ArgumentRest ::
+//     optional TypeWithExtendedAttributes ArgumentName Default
+//     Type Ellipsis ArgumentName
 
-/// ArgumentName ::
-///     ArgumentNameKeyword
-///     identifier
+// ArgumentName ::
+//     ArgumentNameKeyword
+//     identifier
 
-/// Ellipsis ::
-///     ...
-///     ε
+// Ellipsis ::
+//     ...
+//     ε
 
-/// Constructor ::
-///     constructor ( ArgumentList ) ;
+// Constructor ::
+//     constructor ( ArgumentList ) ;
 
-/// Stringifier ::
-///     stringifier StringifierRest
+// Stringifier ::
+//     stringifier StringifierRest
 
-/// StringifierRest ::
-///     OptionalReadOnly AttributeRest
-///     ;
+// StringifierRest ::
+//     OptionalReadOnly AttributeRest
+//     ;
 
-/// StaticMember ::
-///     static StaticMemberRest
+// StaticMember ::
+//     static StaticMemberRest
 
-/// StaticMemberRest ::
-///     OptionalReadOnly AttributeRest
-///     RegularOperation
+// StaticMemberRest ::
+//     OptionalReadOnly AttributeRest
+//     RegularOperation
 
-/// Iterable ::
-///     iterable < TypeWithExtendedAttributes OptionalType > ;
+// Iterable ::
+//     iterable < TypeWithExtendedAttributes OptionalType > ;
 
-/// OptionalType ::
-///     , TypeWithExtendedAttributes
-///     ε
+// OptionalType ::
+//     , TypeWithExtendedAttributes
+//     ε
 
-/// AsyncIterable ::
-///     async iterable < TypeWithExtendedAttributes OptionalType > OptionalArgumentList ;
+// AsyncIterable ::
+//     async iterable < TypeWithExtendedAttributes OptionalType > OptionalArgumentList ;
 
-/// OptionalArgumentList ::
-///     ( ArgumentList )
-///     ε
+// OptionalArgumentList ::
+//     ( ArgumentList )
+//     ε
 
-/// ReadWriteMaplike ::
-///     MaplikeRest
+// ReadWriteMaplike ::
+//     MaplikeRest
 
-/// MaplikeRest ::
-///     maplike < TypeWithExtendedAttributes , TypeWithExtendedAttributes > ;
-
-/// ReadWriteSetlike ::
-///     SetlikeRest
+// MaplikeRest ::
+//     maplike < TypeWithExtendedAttributes , TypeWithExtendedAttributes > ;
+
+// ReadWriteSetlike ::
+//     SetlikeRest
 
-/// SetlikeRest ::
-///     setlike < TypeWithExtendedAttributes > ;
-
-/// Namespace ::
-///     namespace identifier { NamespaceMembers } ;
-
-/// NamespaceMembers ::
-///     ExtendedAttributeList NamespaceMember NamespaceMembers
-///     ε
-
-/// NamespaceMember ::
-///     RegularOperation
-///     readonly AttributeRest
-///     Const
-
-/// Dictionary ::
-///     dictionary identifier Inheritance { DictionaryMembers } ;
-
-/// DictionaryMembers ::
-///     DictionaryMember DictionaryMembers
-///     ε
-
-/// DictionaryMember ::
-///     ExtendedAttributeList DictionaryMemberRest
-
-/// DictionaryMemberRest ::
-///     required TypeWithExtendedAttributes identifier ;
-///     Type identifier Default ;
-
-/// PartialDictionary ::
-///     dictionary identifier { DictionaryMembers } ;
-
-/// Default ::
-///     = DefaultValue
-///     ε
-
-/// Enum ::
-///     enum identifier { EnumValueList } ;
-
-/// EnumValueList ::
-///     string EnumValueListComma
-
-/// EnumValueListComma ::
-///     , EnumValueListString
-///     ε
-
-/// EnumValueListString ::
-///     string EnumValueListComma
-///     ε
-
-/// CallbackRest ::
-///     identifier = Type ( ArgumentList ) ;
-
-/// Typedef ::
-///     typedef TypeWithExtendedAttributes identifier ;
-
-/// Type ::
-///     SingleType
-///     UnionType Null
-
-/// TypeWithExtendedAttributes ::
-///     ExtendedAttributeList Type
-
-/// SingleType ::
-///     DistinguishableType
-///     any
-///     PromiseType
-
-/// UnionType ::
-///     ( UnionMemberType or UnionMemberType UnionMemberTypes )
-/// UnionMemberTypes ::
-///     or UnionMemberType UnionMemberTypes
-///     ε
-
-/// UnionMemberType ::
-///     ExtendedAttributeList DistinguishableType
-///     UnionType Null
-
-/// DistinguishableType ::
-///     PrimitiveType Null
-///     StringType Null
-///     identifier Null
-///     sequence < TypeWithExtendedAttributes > Null
-///     object Null
-///     symbol Null
-///     BufferRelatedType Null
-///     FrozenArray < TypeWithExtendedAttributes > Null
-///     ObservableArray < TypeWithExtendedAttributes > Null
-///     RecordType Null
-///     undefined Null
-
-/// PrimitiveType ::
-///     UnsignedIntegerType
-///     UnrestrictedFloatType
-///     boolean
-///     byte
-///     octet
-///     bigint
-
-/// UnrestrictedFloatType ::
-///     unrestricted FloatType
-///     FloatType
-
-/// FloatType ::
-///     float
-///     double
-
-/// UnsignedIntegerType ::
-///     unsigned IntegerType
-///     IntegerType
-
-/// IntegerType ::
-///     short
-///     long OptionalLong
-/// OptionalLong ::
-///     long
-///     ε
-
-/// StringType ::
-///     ByteString
-///     DOMString
-///     USVString
-
-/// PromiseType ::
-///     Promise < Type >
-
-/// RecordType ::
-///     record < StringType , TypeWithExtendedAttributes >
-
-/// Null ::
-///     ?
-///     ε
-
-/// BufferRelatedType ::
-///     ArrayBuffer
-///     SharedArrayBuffer
-///     DataView
-///     Int8Array
-///     Int16Array
-///     Int32Array
-///     Uint8Array
-///     Uint16Array
-///     Uint32Array
-///     Uint8ClampedArray
-///     BigInt64Array
-///     BigUint64Array
-///     Float32Array
-///     Float64Array
-
-/// ExtendedAttributeList ::
-///     [ ExtendedAttribute ExtendedAttributes ]
-///     ε
-/// ExtendedAttributes ::
-///     , ExtendedAttribute ExtendedAttributes
-///     ε
-
-/// ExtendedAttribute ::
-///     ( ExtendedAttributeInner ) ExtendedAttributeRest
-///     [ ExtendedAttributeInner ] ExtendedAttributeRest
-///     { ExtendedAttributeInner } ExtendedAttributeRest
-///     Other ExtendedAttributeRest
-
-/// ExtendedAttributeRest ::
-///     ExtendedAttribute
-///     ε
-
-/// ExtendedAttributeInner ::
-///     ( ExtendedAttributeInner ) ExtendedAttributeInner
-///     [ ExtendedAttributeInner ] ExtendedAttributeInner
-///     { ExtendedAttributeInner } ExtendedAttributeInner
-///     OtherOrComma ExtendedAttributeInner
-///     ε
-
-/// Other ::
-///     integer
-///     decimal
-///     identifier
-///     string
-///     other
-///     -
-///     -Infinity
-///     .
-///     ...
-///     :
-///     ;
-///     <
-///     =
-///     >
-///     ?
-///     *
-///     ByteString
-///     DOMString
-///     FrozenArray
-///     Infinity
-///     NaN
-///     ObservableArray
-///     Promise
-///     USVString
-///     any
-///     bigint
-///     boolean
-///     byte
-///     double
-///     false
-///     float
-///     long
-///     null
-///     object
-///     octet
-///     or
-///     optional
-///     record
-///     sequence
-///     short
-///     symbol
-///     true
-///     unsigned
-///     undefined
-///     ArgumentNameKeyword
-///     BufferRelatedType
-
-/// OtherOrComma ::
-///     Other
-///     ,
-
-/// IdentifierList ::
-///     identifier Identifiers
-/// Identifiers ::
-///     , identifier Identifiers
-///     ε
-
-/// ExtendedAttributeNoArgs ::
-///     identifier
-
-/// ExtendedAttributeArgList ::
-///     identifier ( ArgumentList )
-
-/// ExtendedAttributeIdent ::
-///     identifier = identifier
-
-/// ExtendedAttributeWildcard ::
-///     identifier = *
-
-/// ExtendedAttributeIdentList ::
-///     identifier = ( IdentifierList )
-
-/// ExtendedAttributeNamedArgList ::
-///     identifier = identifier ( ArgumentList )
+// SetlikeRest ::
+//     setlike < TypeWithExtendedAttributes > ;
+
+// Namespace ::
+//     namespace identifier { NamespaceMembers } ;
+
+// NamespaceMembers ::
+//     ExtendedAttributeList NamespaceMember NamespaceMembers
+//     ε
+
+// NamespaceMember ::
+//     RegularOperation
+//     readonly AttributeRest
+//     Const
+
+// Dictionary ::
+//     dictionary identifier Inheritance { DictionaryMembers } ;
+
+// DictionaryMembers ::
+//     DictionaryMember DictionaryMembers
+//     ε
+
+// DictionaryMember ::
+//     ExtendedAttributeList DictionaryMemberRest
+
+// DictionaryMemberRest ::
+//     required TypeWithExtendedAttributes identifier ;
+//     Type identifier Default ;
+
+// PartialDictionary ::
+//     dictionary identifier { DictionaryMembers } ;
+
+// Default ::
+//     = DefaultValue
+//     ε
+
+// Enum ::
+//     enum identifier { EnumValueList } ;
+
+// EnumValueList ::
+//     string EnumValueListComma
+
+// EnumValueListComma ::
+//     , EnumValueListString
+//     ε
+
+// EnumValueListString ::
+//     string EnumValueListComma
+//     ε
+
+// CallbackRest ::
+//     identifier = Type ( ArgumentList ) ;
+
+// Typedef ::
+//     typedef TypeWithExtendedAttributes identifier ;
+
+// Type ::
+//     SingleType
+//     UnionType Null
+
+// TypeWithExtendedAttributes ::
+//     ExtendedAttributeList Type
+
+// SingleType ::
+//     DistinguishableType
+//     any
+//     PromiseType
+
+// UnionType ::
+//     ( UnionMemberType or UnionMemberType UnionMemberTypes )
+// UnionMemberTypes ::
+//     or UnionMemberType UnionMemberTypes
+//     ε
+
+// UnionMemberType ::
+//     ExtendedAttributeList DistinguishableType
+//     UnionType Null
+
+// DistinguishableType ::
+//     PrimitiveType Null
+//     StringType Null
+//     identifier Null
+//     sequence < TypeWithExtendedAttributes > Null
+//     object Null
+//     symbol Null
+//     BufferRelatedType Null
+//     FrozenArray < TypeWithExtendedAttributes > Null
+//     ObservableArray < TypeWithExtendedAttributes > Null
+//     RecordType Null
+//     undefined Null
+
+// PrimitiveType ::
+//     UnsignedIntegerType
+//     UnrestrictedFloatType
+//     boolean
+//     byte
+//     octet
+//     bigint
+
+// UnrestrictedFloatType ::
+//     unrestricted FloatType
+//     FloatType
+
+// FloatType ::
+//     float
+//     double
+
+// UnsignedIntegerType ::
+//     unsigned IntegerType
+//     IntegerType
+
+// IntegerType ::
+//     short
+//     long OptionalLong
+// OptionalLong ::
+//     long
+//     ε
+
+// StringType ::
+//     ByteString
+//     DOMString
+//     USVString
+
+// PromiseType ::
+//     Promise < Type >
+
+// RecordType ::
+//     record < StringType , TypeWithExtendedAttributes >
+
+// Null ::
+//     ?
+//     ε
+
+// BufferRelatedType ::
+//     ArrayBuffer
+//     SharedArrayBuffer
+//     DataView
+//     Int8Array
+//     Int16Array
+//     Int32Array
+//     Uint8Array
+//     Uint16Array
+//     Uint32Array
+//     Uint8ClampedArray
+//     BigInt64Array
+//     BigUint64Array
+//     Float32Array
+//     Float64Array
+
+// ExtendedAttributeList ::
+//     [ ExtendedAttribute ExtendedAttributes ]
+//     ε
+// ExtendedAttributes ::
+//     , ExtendedAttribute ExtendedAttributes
+//     ε
+
+// ExtendedAttribute ::
+//     ( ExtendedAttributeInner ) ExtendedAttributeRest
+//     [ ExtendedAttributeInner ] ExtendedAttributeRest
+//     { ExtendedAttributeInner } ExtendedAttributeRest
+//     Other ExtendedAttributeRest
+
+// ExtendedAttributeRest ::
+//     ExtendedAttribute
+//     ε
+
+// ExtendedAttributeInner ::
+//     ( ExtendedAttributeInner ) ExtendedAttributeInner
+//     [ ExtendedAttributeInner ] ExtendedAttributeInner
+//     { ExtendedAttributeInner } ExtendedAttributeInner
+//     OtherOrComma ExtendedAttributeInner
+//     ε
+
+// Other ::
+//     integer
+//     decimal
+//     identifier
+//     string
+//     other
+//     -
+//     -Infinity
+//     .
+//     ...
+//     :
+//     ;
+//     <
+//     =
+//     >
+//     ?
+//     *
+//     ByteString
+//     DOMString
+//     FrozenArray
+//     Infinity
+//     NaN
+//     ObservableArray
+//     Promise
+//     USVString
+//     any
+//     bigint
+//     boolean
+//     byte
+//     double
+//     false
+//     float
+//     long
+//     null
+//     object
+//     octet
+//     or
+//     optional
+//     record
+//     sequence
+//     short
+//     symbol
+//     true
+//     unsigned
+//     undefined
+//     ArgumentNameKeyword
+//     BufferRelatedType
+
+// OtherOrComma ::
+//     Other
+//     ,
+
+// IdentifierList ::
+//     identifier Identifiers
+// Identifiers ::
+//     , identifier Identifiers
+//     ε
+
+// ExtendedAttributeNoArgs ::
+//     identifier
+
+// ExtendedAttributeArgList ::
+//     identifier ( ArgumentList )
+
+// ExtendedAttributeIdent ::
+//     identifier = identifier
+
+// ExtendedAttributeWildcard ::
+//     identifier = *
+
+// ExtendedAttributeIdentList ::
+//     identifier = ( IdentifierList )
+
+// ExtendedAttributeNamedArgList ::
+//     identifier = identifier ( ArgumentList )
 
 //
 //
 
-/// integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)
+// integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)
 
-/// decimal     =  -?(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([Ee][+-]?[0-9]+)?|[0-9]+[Ee][+-]?[0-9]+)
+// decimal     =  -?(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([Ee][+-]?[0-9]+)?|[0-9]+[Ee][+-]?[0-9]+)
 
-/// identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*
+// identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*
 
-/// string      =  "[^"]*"
+// string      =  "[^"]*"
 
-/// whitespace  =  [\t\n\r ]+
+// whitespace  =  [\t\n\r ]+
 
-/// comment     =  \/\/.*|\/\*(.|\n)*?\*\/
+// comment     =  \/\/.*|\/\*(.|\n)*?\*\/
 
-/// other       =  [^\t\n\r 0-9A-Za-z]
+// other       =  [^\t\n\r 0-9A-Za-z]
