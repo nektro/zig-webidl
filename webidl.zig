@@ -68,7 +68,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     MixinRest
 
 // InterfaceRest ::
-//     identifier Inheritance? { InterfaceMembers? } ;
+//     identifier Inheritance? { InterfaceMembers } ;
 
 // Partial ::
 //     partial PartialDefinition
@@ -83,7 +83,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     MixinRest
 
 // PartialInterfaceRest ::
-//     identifier { PartialInterfaceMembers? } ;
+//     identifier { PartialInterfaceMembers } ;
 
 // InterfaceMembers ::
 //     (ExtendedAttributeList? InterfaceMember)*
@@ -93,7 +93,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     Constructor
 
 // PartialInterfaceMembers ::
-//     (ExtendedAttributeList? PartialInterfaceMember)+
+//     (ExtendedAttributeList? PartialInterfaceMember)*
 
 // PartialInterfaceMember ::
 //     Const
@@ -112,26 +112,26 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     : identifier
 
 // MixinRest ::
-//     mixin identifier { MixinMembers? } ;
+//     mixin identifier { MixinMembers } ;
 
 // MixinMembers ::
-//     (ExtendedAttributeList? MixinMember)+
+//     (ExtendedAttributeList? MixinMember)*
 
 // MixinMember ::
 //     Const
 //     RegularOperation
 //     Stringifier
-//     OptionalReadOnly? AttributeRest
+//     readonly? AttributeRest
 
 // IncludesStatement ::
 //     identifier includes identifier ;
 
 // CallbackRestOrInterface ::
 //     CallbackRest
-//     interface identifier { CallbackInterfaceMembers? } ;
+//     interface identifier { CallbackInterfaceMembers } ;
 
 // CallbackInterfaceMembers ::
-//     (ExtendedAttributeList? CallbackInterfaceMember)+
+//     (ExtendedAttributeList? CallbackInterfaceMember)*
 
 // CallbackInterfaceMember ::
 //     Const
@@ -184,9 +184,6 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     async
 //     required
 
-// OptionalReadOnly ::
-//     readonly
-
 // DefaultValue ::
 //     ConstValue
 //     string
@@ -211,10 +208,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     deleter
 
 // OperationRest ::
-//     OptionalOperationName? ( ArgumentList? ) ;
-
-// OptionalOperationName ::
-//     OperationName
+//     OperationName? OptionalArgumentList ;
 
 // OperationName ::
 //     OperationNameKeyword
@@ -241,20 +235,20 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     ...
 
 // Constructor ::
-//     constructor ( ArgumentList? ) ;
+//     constructor OptionalArgumentList ;
 
 // Stringifier ::
 //     stringifier StringifierRest
 
 // StringifierRest ::
-//     OptionalReadOnly? AttributeRest
+//     readonly? AttributeRest
 //     ;
 
 // StaticMember ::
 //     static StaticMemberRest
 
 // StaticMemberRest ::
-//     OptionalReadOnly? AttributeRest
+//     readonly? AttributeRest
 //     RegularOperation
 
 // Iterable ::
@@ -266,7 +260,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 // AsyncIterable ::
 //     async iterable < TypeWithExtendedAttributes OptionalType? > OptionalArgumentList? ;
 
-// OptionalArgumentList? ::
+// OptionalArgumentList ::
 //     ( ArgumentList? )
 
 // ReadWriteMaplike ::
@@ -315,16 +309,10 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     enum identifier { EnumValueList } ;
 
 // EnumValueList ::
-//     string EnumValueListComma?
-
-// EnumValueListComma ::
-//     , EnumValueListString?
-
-// EnumValueListString ::
-//     string EnumValueListComma?
+//     string (, string)*
 
 // CallbackRest ::
-//     identifier = Type ( ArgumentList? ) ;
+//     identifier = Type OptionalArgumentList ;
 
 // Typedef ::
 //     typedef TypeWithExtendedAttributes identifier ;
@@ -383,9 +371,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 
 // IntegerType ::
 //     short
-//     long OptionalLong?
-// OptionalLong ::
-//     long
+//     long long?
 
 // StringType ::
 //     ByteString
@@ -494,7 +480,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     identifier
 
 // ExtendedAttributeArgList ::
-//     identifier ( ArgumentList? )
+//     identifier OptionalArgumentList
 
 // ExtendedAttributeIdent ::
 //     identifier = identifier
@@ -506,7 +492,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     identifier = ( IdentifierList )
 
 // ExtendedAttributeNamedArgList ::
-//     identifier = identifier ( ArgumentList? )
+//     identifier = identifier OptionalArgumentList
 
 //
 //
