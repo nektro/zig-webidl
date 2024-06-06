@@ -129,6 +129,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 // CallbackRestOrInterface ::
 //     CallbackRest
 //     interface identifier { CallbackInterfaceMembers } ;
+// CallbackRest ::
+//     identifier = Type OptionalArgumentList ;
 
 // CallbackInterfaceMembers ::
 //     (ExtendedAttributeList? CallbackInterfaceMember)*
@@ -177,10 +179,7 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     attribute TypeWithExtendedAttributes AttributeName ;
 
 // AttributeName ::
-//     AttributeNameKeyword
 //     identifier
-
-// AttributeNameKeyword ::
 //     async
 //     required
 
@@ -193,14 +192,10 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     undefined
 
 // Operation ::
-//     RegularOperation
-//     SpecialOperation
+//     Special? RegularOperation
 
 // RegularOperation ::
 //     Type OperationRest
-
-// SpecialOperation ::
-//     Special RegularOperation
 
 // Special ::
 //     getter
@@ -211,22 +206,17 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     OperationName? OptionalArgumentList ;
 
 // OperationName ::
-//     OperationNameKeyword
-//     identifier
-
-// OperationNameKeyword ::
 //     includes
+//     identifier
 
 // ArgumentList ::
 //     Argument (, Argument)*
 
 // Argument ::
 //     ExtendedAttributeList? ArgumentRest
-
 // ArgumentRest ::
 //     optional TypeWithExtendedAttributes ArgumentName Default?
 //     Type Ellipsis? ArgumentName
-
 // ArgumentName ::
 //     ArgumentNameKeyword
 //     identifier
@@ -239,14 +229,12 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 
 // Stringifier ::
 //     stringifier StringifierRest
-
 // StringifierRest ::
 //     readonly? AttributeRest
 //     ;
 
 // StaticMember ::
 //     static StaticMemberRest
-
 // StaticMemberRest ::
 //     readonly? AttributeRest
 //     RegularOperation
@@ -277,10 +265,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 
 // Namespace ::
 //     namespace identifier { NamespaceMembers? } ;
-
 // NamespaceMembers? ::
 //     (ExtendedAttributeList? NamespaceMember)+
-
 // NamespaceMember ::
 //     RegularOperation
 //     readonly AttributeRest
@@ -291,10 +277,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 
 // DictionaryMembers? ::
 //     DictionaryMember+
-
 // DictionaryMember ::
 //     ExtendedAttributeList? DictionaryMemberRest
-
 // DictionaryMemberRest ::
 //     required TypeWithExtendedAttributes identifier ;
 //     Type identifier Default? ;
@@ -307,12 +291,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 
 // Enum ::
 //     enum identifier { EnumValueList } ;
-
 // EnumValueList ::
 //     string (, string)*
-
-// CallbackRest ::
-//     identifier = Type OptionalArgumentList ;
 
 // Typedef ::
 //     typedef TypeWithExtendedAttributes identifier ;
@@ -331,7 +311,6 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 
 // UnionType ::
 //     ( UnionMemberType (or UnionMemberType)* )
-
 // UnionMemberType ::
 //     ExtendedAttributeList? DistinguishableType
 //     UnionType Null?
@@ -411,16 +390,13 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     [ ExtendedAttributeInner? ] ExtendedAttributeRest?
 //     { ExtendedAttributeInner? } ExtendedAttributeRest?
 //     Other ExtendedAttributeRest?
-
 // ExtendedAttributeRest ::
 //     ExtendedAttribute
-
 // ExtendedAttributeInner? ::
 //     ( ExtendedAttributeInner? ) ExtendedAttributeInner?
 //     [ ExtendedAttributeInner? ] ExtendedAttributeInner?
 //     { ExtendedAttributeInner? } ExtendedAttributeInner?
 //     OtherOrComma ExtendedAttributeInner?
-
 // Other ::
 //     integer
 //     decimal
@@ -468,31 +444,9 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype) !w.Docum
 //     undefined
 //     ArgumentNameKeyword
 //     BufferRelatedType
-
 // OtherOrComma ::
 //     Other
 //     ,
-
-// IdentifierList ::
-//     identifier (, identifier)*
-
-// ExtendedAttributeNoArgs ::
-//     identifier
-
-// ExtendedAttributeArgList ::
-//     identifier OptionalArgumentList
-
-// ExtendedAttributeIdent ::
-//     identifier = identifier
-
-// ExtendedAttributeWildcard ::
-//     identifier = *
-
-// ExtendedAttributeIdentList ::
-//     identifier = ( IdentifierList )
-
-// ExtendedAttributeNamedArgList ::
-//     identifier = identifier OptionalArgumentList
 
 //
 //
