@@ -267,17 +267,17 @@ fn parseInterfaceMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     ReadWriteSetlike
 //     InheritAttribute
 fn parsePartialInterfaceMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parseConst(alloc, p)) |_| return;
-    if (try parseOperation(alloc, p)) |_| return;
-    if (try parseStringifier(alloc, p)) |_| return;
-    if (try parseStaticMember(alloc, p)) |_| return;
-    if (try parseIterable(alloc, p)) |_| return;
-    if (try parseAsyncIterable(alloc, p)) |_| return;
-    if (try parseReadOnlyMember(alloc, p)) |_| return;
-    if (try parseReadWriteAttribute(alloc, p)) |_| return;
-    if (try parseReadWriteMaplike(alloc, p)) |_| return;
-    if (try parseReadWriteSetlike(alloc, p)) |_| return;
     if (try parseInheritAttribute(alloc, p)) |_| return;
+    if (try parseReadWriteSetlike(alloc, p)) |_| return;
+    if (try parseReadWriteMaplike(alloc, p)) |_| return;
+    if (try parseReadWriteAttribute(alloc, p)) |_| return;
+    if (try parseReadOnlyMember(alloc, p)) |_| return;
+    if (try parseAsyncIterable(alloc, p)) |_| return;
+    if (try parseIterable(alloc, p)) |_| return;
+    if (try parseStaticMember(alloc, p)) |_| return;
+    if (try parseStringifier(alloc, p)) |_| return;
+    if (try parseOperation(alloc, p)) |_| return;
+    if (try parseConst(alloc, p)) |_| return;
     return null;
 }
 
