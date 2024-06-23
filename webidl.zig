@@ -1189,7 +1189,7 @@ fn parse_identifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?[2]usize {
         cont = cont or try p.eatByte('-') != null;
     }
     const end = p.parser.idx;
-    try parse_whitespace(alloc, p);
+    try skip_whitespace(alloc, p);
     return .{ start, end };
 }
 
@@ -1206,8 +1206,9 @@ fn parse_string(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.StringIndex {
 }
 
 // whitespace  =  [\t\n\r ]+
-fn parse_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
+fn parse_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
     _ = alloc;
+    var ret = false;
     var old: usize = 0;
     while (p.parser.idx > old) {
         old = p.parser.idx;
@@ -1220,15 +1221,18 @@ fn parse_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
             cont = cont or try p.trimByte('\n') > 0;
             cont = cont or try p.trimByte('\r') > 0;
             cont = cont or try p.trimByte('\t') > 0;
+            ret = ret or cont;
         }
     }
+    return ret;
 }
 
 // comment     =  \/\/.*|\/\*(.|\n)*?\*\/
-fn parse_comment(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
+fn parse_comment(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
     _ = alloc;
-    try p.eat("//") orelse return;
+    try p.eat("//") orelse return false;
     _ = try p.eatUntil('\n') orelse return error.MalformedWebIDL;
+    return true;
 }
 
 // other       =  [^\t\n\r 0-9A-Za-z]
@@ -1252,5 +1256,9 @@ fn parse_keyword(alloc: std.mem.Allocator, p: *Parser, comptime s: []const u8) !
 
 fn parse_symbol(alloc: std.mem.Allocator, p: *Parser, comptime c: u8) !?void {
     _ = try p.eatByte(c) orelse return null;
-    try parse_whitespace(alloc, p);
+    try skip_whitespace(alloc, p);
+}
+
+fn skip_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
+    while (try parse_whitespace(alloc, p) or try parse_comment(alloc, p)) {}
 }
