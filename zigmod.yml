@@ -6,6 +6,7 @@ description: Pure-Zig WebIDL parser.
 dependencies:
   - src: git https://github.com/nektro/zig-extras
   - src: git https://github.com/nektro/zig-tracer
+  - src: git https://github.com/nektro/zig-intrusive-parser
 
 root_dependencies:
   - src: git https://github.com/w3c/webidl2.js
