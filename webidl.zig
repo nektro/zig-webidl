@@ -50,6 +50,7 @@ fn parseDefinitionsPrecise(alloc: std.mem.Allocator, p: *Parser, comptime E: typ
 // Definitions ::
 //     (ExtendedAttributeList? Definition)*
 fn parseDefinitions(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
+    try skip_whitespace(alloc, p);
     while (true) {
         _ = try parseExtendedAttributeList(alloc, p) orelse {};
         _ = try parseDefinition(alloc, p) orelse break;
