@@ -833,6 +833,9 @@ fn parseUnionMemberType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         _ = try parseDistinguishableType(alloc, p) orelse return error.MalformedWebIDL;
         return;
     }
+    if (try parseDistinguishableType(alloc, p)) |_| {
+        return;
+    }
     _ = try parseUnionType(alloc, p) orelse return null;
     _ = try parseNull(alloc, p);
 }
