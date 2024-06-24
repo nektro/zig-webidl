@@ -176,8 +176,8 @@ fn parseCallbackOrInterfaceOrMixin(alloc: std.mem.Allocator, p: *Parser) anyerro
         return null;
     }
     if (try parse_keyword(alloc, p, "interface")) |_| {
-        if (try parseInterfaceRest(alloc, p)) |_| return;
         if (try parseMixinRest(alloc, p)) |_| return;
+        if (try parseInterfaceRest(alloc, p)) |_| return;
         return null;
     }
     return null;
