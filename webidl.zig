@@ -1235,9 +1235,11 @@ fn parse_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
 // comment     =  \/\/.*|\/\*(.|\n)*?\*\/
 fn parse_comment(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
     _ = alloc;
-    try p.eat("//") orelse return false;
-    _ = try p.eatUntil('\n') orelse return error.MalformedWebIDL;
-    return true;
+    if (try p.eat("//")) |_| {
+        _ = try p.eatUntil('\n') orelse return error.MalformedWebIDL;
+        return true;
+    }
+    return false;
 }
 
 // other       =  [^\t\n\r 0-9A-Za-z]
