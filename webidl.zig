@@ -680,11 +680,13 @@ fn parseNamespace(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     readonly AttributeRest
 //     Const
 fn parseNamespaceMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parseRegularOperation(alloc, p)) |_| return;
+    if (try parse_keyword(alloc, p, "readonly")) |_| {
+        _ = try parseAttributeRest(alloc, p) orelse return error.MalformedWebIDL;
+        return;
+    }
     if (try parseConst(alloc, p)) |_| return;
-
-    try parse_keyword(alloc, p, "readonly") orelse return null;
-    _ = try parseAttributeRest(alloc, p) orelse return error.MalformedWebIDL;
+    if (try parseRegularOperation(alloc, p)) |_| return;
+    return null;
 }
 
 // Dictionary ::
