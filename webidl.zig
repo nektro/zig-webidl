@@ -343,8 +343,8 @@ fn parseConst(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     integer
 fn parseConstValue(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parseBooleanLiteral(alloc, p)) |_| return;
-    if (try parseFloatLiteral(alloc, p)) |_| return;
     if (try parse_integer(alloc, p)) |_| return;
+    if (try parseFloatLiteral(alloc, p)) |_| return;
     return null;
 }
 
