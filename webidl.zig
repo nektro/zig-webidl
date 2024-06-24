@@ -575,10 +575,14 @@ fn parseStringifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseStaticMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(alloc, p, "static") orelse return null;
 
-    if (try parseRegularOperation(alloc, p)) |_| return;
-
-    _ = try parse_keyword(alloc, p, "readonly");
-    _ = try parseAttributeRest(alloc, p) orelse return error.MalformedWebIDL;
+    if (try parse_keyword(alloc, p, "readonly")) |_| {
+        _ = try parseAttributeRest(alloc, p) orelse return error.MalformedWebIDL;
+        return;
+    }
+    if (try parseRegularOperation(alloc, p)) |_| {
+        return;
+    }
+    return null;
 }
 
 // Iterable ::
