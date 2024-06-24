@@ -284,7 +284,7 @@ fn parsePartialInterfaceMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?v
 // Inheritance ::
 //     : identifier
 fn parseInheritance(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    try parse_symbol(alloc, p, '}') orelse return null;
+    try parse_symbol(alloc, p, ':') orelse return null;
     _ = try parse_identifier(alloc, p) orelse return error.MalformedWebIDL;
 }
 
