@@ -324,6 +324,9 @@ fn parseMixinMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     identifier includes identifier ;
 fn parseIncludesStatement(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = try parse_identifier(alloc, p) orelse return null;
+    _ = try parse_keyword(alloc, p, "includes") orelse return error.MalformedWebIDL;
+    _ = try parse_identifier(alloc, p) orelse return error.MalformedWebIDL;
+    _ = try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Const ::
