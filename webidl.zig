@@ -775,7 +775,7 @@ fn parseEnum(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 
     while (true) {
         try parse_symbol(alloc, p, ',') orelse break;
-        try list.append(alloc, try parse_string(alloc, p) orelse return error.MalformedWebIDL);
+        try list.append(alloc, try parse_string(alloc, p) orelse continue);
     }
     try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
     try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
@@ -1216,6 +1216,7 @@ fn parse_string(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.StringIndex {
         p.parser.idx += 1;
     }
     const end = p.parser.idx;
+    try skip_whitespace(alloc, p);
     return try p.addStr(alloc, p.parser.temp.items[start..end]);
 }
 
