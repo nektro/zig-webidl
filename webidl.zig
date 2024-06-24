@@ -1239,6 +1239,10 @@ fn parse_comment(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
         _ = try p.eatUntil('\n') orelse return error.MalformedWebIDL;
         return true;
     }
+    if (try p.eat("/*")) |_| {
+        _ = try p.eatUntilStr("*/") orelse return error.MalformedWebIDL;
+        return true;
+    }
     return false;
 }
 
