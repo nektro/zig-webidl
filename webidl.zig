@@ -854,27 +854,28 @@ fn parseUnionMemberType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     undefined Null?
 fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = blk: {
-        //
-        if (try parsePrimitiveType(alloc, p)) |_| break :blk;
-        if (try parseStringType(alloc, p)) |_| break :blk;
-        if (try parse_identifier(alloc, p)) |_| break :blk;
-        if (try parse_keyword(alloc, p, "object")) |_| break :blk;
-        if (try parse_keyword(alloc, p, "object")) |_| break :blk;
-        if (try parse_keyword(alloc, p, "symbol")) |_| break :blk;
-        if (try parseBufferRelatedType(alloc, p)) |_| break :blk;
-        if (try parseRecordType(alloc, p)) |_| break :blk;
-        if (try parse_keyword(alloc, p, "undefined")) |_| break :blk;
-
         _ = blk2: {
             if (try parse_keyword(alloc, p, "sequence")) |_| break :blk2;
             if (try parse_keyword(alloc, p, "FrozenArray")) |_| break :blk2;
             if (try parse_keyword(alloc, p, "ObservableArray")) |_| break :blk2;
-            return null;
+            break :blk;
         };
         try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
         _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
         try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
-        break :blk;
+        _ = try parse_symbol(alloc, p, '?');
+        return;
+    };
+    _ = blk: {
+        if (try parse_keyword(alloc, p, "object")) |_| break :blk;
+        if (try parse_keyword(alloc, p, "symbol")) |_| break :blk;
+        if (try parse_keyword(alloc, p, "undefined")) |_| break :blk;
+        if (try parsePrimitiveType(alloc, p)) |_| break :blk;
+        if (try parseStringType(alloc, p)) |_| break :blk;
+        if (try parseBufferRelatedType(alloc, p)) |_| break :blk;
+        if (try parseRecordType(alloc, p)) |_| break :blk;
+        if (try parse_identifier(alloc, p)) |_| break :blk;
+        return null;
     };
     _ = try parse_symbol(alloc, p, '?');
 }
