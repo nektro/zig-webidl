@@ -183,7 +183,7 @@ test { try doFail("union-one"); }
 test { try doFail("union-promise"); }
 test { try doFail("union-zero"); }
 test { try doFail("unknown-generic"); }
-test { try doFail("void-keyword"); }
+// test { try doFail("void-keyword"); } // https://github.com/w3c/webidl2.js/issues/784
 // zig fmt: on
 
 fn doFail(comptime case: string) !void {
