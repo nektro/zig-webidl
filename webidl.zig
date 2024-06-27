@@ -840,9 +840,11 @@ fn parseUnionType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     UnionType Null?
 fn parseUnionMemberType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parseExtendedAttributeList(alloc, p)) |_| {
+        if (try parse_keyword(alloc, p, "any")) |_| return error.MalformedWebIDL;
         _ = try parseDistinguishableType(alloc, p) orelse return error.MalformedWebIDL;
         return;
     }
+    if (try parse_keyword(alloc, p, "any")) |_| return error.MalformedWebIDL;
     if (try parseDistinguishableType(alloc, p)) |_| {
         return;
     }
