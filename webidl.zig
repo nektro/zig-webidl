@@ -832,6 +832,7 @@ fn parseUnionType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         try list.append(alloc, try parseUnionMemberType(alloc, p) orelse return error.MalformedWebIDL);
     }
     try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
+    if (list.items.len == 1) return error.MalformedWebIDL;
 }
 
 // UnionMemberType ::
