@@ -543,9 +543,10 @@ fn parseArgumentName(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // Ellipsis ::
 //     ...
 fn parseEllipsis(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    try parse_symbol(alloc, p, '.') orelse return null;
-    try parse_symbol(alloc, p, '.') orelse return null;
-    try parse_symbol(alloc, p, '.') orelse return null;
+    _ = try p.eatByte('.') orelse return null;
+    _ = try p.eatByte('.') orelse return error.MalformedWebIDL;
+    _ = try p.eatByte('.') orelse return error.MalformedWebIDL;
+    try skip_whitespace(alloc, p);
 }
 
 // Constructor ::
