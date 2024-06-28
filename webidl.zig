@@ -1369,5 +1369,7 @@ fn parse_name(alloc: std.mem.Allocator, p: *Parser) anyerror!?[2]usize {
     const name = p.parser.temp.items[start..end];
     if (std.mem.eql(u8, name, "constructor")) return error.MalformedWebIDL;
     if (std.mem.eql(u8, name, "toString")) return error.MalformedWebIDL;
+    @setEvalBranchQuota(10_000);
+    if (std.meta.stringToEnum(Keyword, name) != null) return error.MalformedWebIDL;
     return .{ start, end };
 }

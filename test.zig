@@ -168,7 +168,7 @@ test { try doFail("sequence-empty"); }
 test { try doFail("setlike-2types"); }
 test { try doFail("setlike-args"); }
 test { try doFail("setter-creator"); }
-// test { try doFail("sharedarraybuffer"); } // https://github.com/w3c/webidl2.js/issues/786
+test { try doFail("sharedarraybuffer"); }
 test { try doFail("spaced-negative-infinity"); }
 test { try doFail("spaced-variadic"); }
 test { try doFail("special-omittable"); }
