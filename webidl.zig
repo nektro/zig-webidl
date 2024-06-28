@@ -1190,8 +1190,13 @@ fn parse_decimal(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 
 // identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*
 fn parse_identifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?[2]usize {
-    const start = p.parser.idx;
+    var start = p.parser.idx;
 
+    if (try p.eatByte('_')) |_| {
+        start += 1;
+    } else if (try p.eatByte('-')) |_| {
+        //
+    }
     _ = try p.eatAnyScalar("_-");
     _ = try p.eatRange('A', 'Z') orelse try p.eatRange('a', 'z') orelse {
         p.parser.idx = start; // need to reset in case we ate a '_' or '-'
