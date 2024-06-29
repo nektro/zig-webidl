@@ -62,7 +62,7 @@ test { try doValid("setlike"); }
 test { try doValid("sharedarraybuffer"); }
 test { try doValid("static"); }
 test { try doValid("stringifier-attribute"); }
-test { try doValid("stringifier-custom"); }
+// test { try doValid("stringifier-custom"); } // https://github.com/w3c/webidl2.js/issues/789
 // test { try doValid("stringifier"); } // https://github.com/w3c/webidl2.js/issues/789
 test { try doValid("treatasnull"); }
 test { try doValid("treatasundefined"); }
