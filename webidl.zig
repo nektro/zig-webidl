@@ -1127,6 +1127,7 @@ fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         if (std.mem.eql(u8, name, "NamedConstructor")) return error.MalformedWebIDL; // Renamed to [LegacyFactoryFunction]; see https://github.com/whatwg/webidl/pull/870
         if (std.mem.eql(u8, name, "TreatNullAs")) return error.MalformedWebIDL; // Renamed to [LegacyNullToEmptyString]; see https://github.com/whatwg/webidl/pull/870
         if (std.mem.eql(u8, name, "NoInterfaceObject")) return error.MalformedWebIDL; // Renamed to [LegacyNoInterfaceObject]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "Constructor")) return error.MalformedWebIDL; // Constructors should now be represented as a `constructor()` operation on the interface instead of a `[Constructor]` extended attribute; see https://webidl.spec.whatwg.org/#idl-constructors
     }
     if (try parse_symbol(alloc, p, '(')) |_| {
         _ = try parseArgumentList(alloc, p);
