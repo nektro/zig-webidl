@@ -1,13 +1,16 @@
 const Document = @This();
 const std = @import("std");
+const string = []const u8;
 
 pub threadlocal var doc: ?*const Document = null;
 
 data: []const u8,
 root: void,
+warnings: []const string,
 
 pub fn deinit(this: *const Document, alloc: std.mem.Allocator) void {
     alloc.free(this.data);
+    alloc.free(this.warnings);
 }
 
 pub fn acquire(this: *const Document) void {

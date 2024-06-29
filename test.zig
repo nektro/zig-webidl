@@ -193,5 +193,6 @@ fn doFail(comptime case: string) !void {
     defer file.close();
     var doc = webidl.parse(allocator, path, file.reader(), .{}) catch return;
     defer doc.deinit(allocator);
+    if (doc.warnings.len > 0) return;
     return error.ShouldHaveFailed;
 }

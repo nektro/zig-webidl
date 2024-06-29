@@ -9,6 +9,8 @@ const Value = w.Value;
 const StringIndex = w.StringIndex;
 
 parser: intrusive_parser.Parser,
+warnings: std.ArrayListUnmanaged(string) = .{},
+
 max_depth: u16 = 0,
 
 pub fn init(allocator: std.mem.Allocator, any: std.io.AnyReader, options: Options) Parser {
@@ -24,6 +26,7 @@ pub const Options = struct {
 
 pub fn deinit(p: *Parser) void {
     p.parser.deinit();
+    p.warnings.deinit(p.parser.allocator);
 }
 
 pub usingnamespace intrusive_parser.Mixin(@This());

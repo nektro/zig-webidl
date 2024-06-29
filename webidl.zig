@@ -35,11 +35,18 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
         std.log.warn("avail: {s}", .{p.parser.temp.items[p.parser.idx..]});
         return error.MalformedWebIDL;
     }
+
     const data = try p.parser.data.toOwnedSlice(alloc);
+    errdefer alloc.free(data);
+
+    const warnings = try p.warnings.toOwnedSlice(alloc);
+    // dont need to free the children since theyre literals
+    errdefer alloc.free(warnings);
 
     return .{
         .data = data,
         .root = root,
+        .warnings = warnings,
     };
 }
 
