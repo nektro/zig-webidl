@@ -1116,7 +1116,18 @@ fn parseExtendedAttributeList(alloc: std.mem.Allocator, p: *Parser) anyerror!?vo
 //     identifier = identifier ( ArgumentList )
 
 fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    _ = try parse_name(alloc, p) orelse return null;
+    const name_start, const name_end = try parse_name(alloc, p) orelse return null;
+    const name = p.parser.temp.items[name_start..name_end];
+    {
+        if (std.mem.eql(u8, name, "LenientSetter")) return error.MalformedWebIDL; // Renamed to [LegacyLenientSetter]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "LenientThis")) return error.MalformedWebIDL; // Renamed to [LegacyLenientThis]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "OverrideBuiltins")) return error.MalformedWebIDL; // Renamed to [LegacyOverrideBuiltIns]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "TreatNonObjectAsNull")) return error.MalformedWebIDL; // Renamed to [LegacyTreatNonObjectAsNull]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "Unforgeable")) return error.MalformedWebIDL; // Renamed to [LegacyUnforgeable]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "NamedConstructor")) return error.MalformedWebIDL; // Renamed to [LegacyFactoryFunction]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "TreatNullAs")) return error.MalformedWebIDL; // Renamed to [LegacyNullToEmptyString]; see https://github.com/whatwg/webidl/pull/870
+        if (std.mem.eql(u8, name, "NoInterfaceObject")) return error.MalformedWebIDL; // Renamed to [LegacyNoInterfaceObject]; see https://github.com/whatwg/webidl/pull/870
+    }
     if (try parse_symbol(alloc, p, '(')) |_| {
         _ = try parseArgumentList(alloc, p);
         _ = try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
