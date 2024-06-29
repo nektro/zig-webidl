@@ -63,7 +63,7 @@ test { try doValid("sharedarraybuffer"); }
 test { try doValid("static"); }
 // test { try doValid("stringifier-attribute"); } // https://github.com/w3c/webidl2.js/issues/788
 // test { try doValid("stringifier-custom"); } // https://github.com/w3c/webidl2.js/issues/788
-test { try doValid("stringifier"); }
+// test { try doValid("stringifier"); } // https://github.com/w3c/webidl2.js/issues/789
 // test { try doValid("treatasnull"); } // https://github.com/w3c/webidl2.js/issues/787
 test { try doValid("treatasundefined"); }
 test { try doValid("typedef-union"); }
