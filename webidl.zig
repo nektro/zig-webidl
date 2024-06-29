@@ -1253,7 +1253,8 @@ fn parse_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
     _ = alloc;
     var ret = false;
     var old: usize = 0;
-    while (p.parser.idx > old) {
+    var iteration: usize = 0;
+    while (p.parser.idx > old or iteration == 0) : (iteration += 1) {
         old = p.parser.idx;
         try p.peekAmt(1) orelse break;
 
