@@ -30,7 +30,7 @@ test { try doValid("exposed-asterisk"); }
 test { try doValid("extended-attributes"); }
 test { try doValid("generic"); }
 test { try doValid("getter-setter"); }
-// test { try doValid("identifier-hyphen"); } // https://github.com/w3c/webidl2.js/issues/787
+test { try doValid("identifier-hyphen"); }
 test { try doValid("identifier-qualified-names"); }
 test { try doValid("includes-name"); }
 test { try doValid("indexed-properties"); }
@@ -39,21 +39,21 @@ test { try doValid("interface-inherits"); }
 test { try doValid("iterable"); }
 test { try doValid("maplike"); }
 test { try doValid("mixin"); }
-// test { try doValid("namedconstructor"); } // https://github.com/w3c/webidl2.js/issues/787
+test { try doValid("namedconstructor"); }
 test { try doValid("namespace"); }
-// test { try doValid("nointerfaceobject"); } // https://github.com/w3c/webidl2.js/issues/787
+test { try doValid("nointerfaceobject"); }
 test { try doValid("nullableobjects"); }
 test { try doValid("nullable"); }
 test { try doValid("obsolete-keywords"); }
 test { try doValid("operation-optional-arg"); }
 test { try doValid("overloading"); }
-// test { try doValid("overridebuiltins"); } // https://github.com/w3c/webidl2.js/issues/787
+test { try doValid("overridebuiltins"); }
 test { try doValid("partial-interface"); }
 test { try doValid("primitives"); }
 test { try doValid("promise-void"); }
 test { try doValid("prototyperoot"); }
 test { try doValid("putforwards"); }
-// test { try doValid("record"); } // https://github.com/w3c/webidl2.js/issues/788
+test { try doValid("record"); }
 test { try doValid("reflector-interface"); }
 test { try doValid("reg-operations"); }
 test { try doValid("replaceable"); }
@@ -61,10 +61,10 @@ test { try doValid("sequence"); }
 test { try doValid("setlike"); }
 test { try doValid("sharedarraybuffer"); }
 test { try doValid("static"); }
-// test { try doValid("stringifier-attribute"); } // https://github.com/w3c/webidl2.js/issues/788
-// test { try doValid("stringifier-custom"); } // https://github.com/w3c/webidl2.js/issues/788
+test { try doValid("stringifier-attribute"); }
+test { try doValid("stringifier-custom"); }
 // test { try doValid("stringifier"); } // https://github.com/w3c/webidl2.js/issues/789
-// test { try doValid("treatasnull"); } // https://github.com/w3c/webidl2.js/issues/787
+test { try doValid("treatasnull"); }
 test { try doValid("treatasundefined"); }
 test { try doValid("typedef-union"); }
 test { try doValid("typedef"); }
