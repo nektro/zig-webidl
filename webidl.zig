@@ -1290,13 +1290,6 @@ fn parse_comment(p: *Parser) anyerror!bool {
     return false;
 }
 
-// other       =  [^\t\n\r 0-9A-Za-z]
-fn parse_other(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    _ = alloc;
-    _ = p;
-    @compileError("unimplemented");
-}
-
 //
 //
 
