@@ -923,7 +923,7 @@ fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     FloatType
 fn parseUnrestrictedFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parse_keyword(alloc, p, .unrestricted)) |_| {
-        _ = try parseFloatType(alloc, p) orelse return null;
+        _ = try parseFloatType(alloc, p) orelse return error.MalformedWebIDL;
         return;
     }
     _ = try parseFloatType(alloc, p) orelse return null;
@@ -944,7 +944,7 @@ fn parseFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     IntegerType
 fn parseUnsignedIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parse_keyword(alloc, p, .unsigned)) |_| {
-        _ = try parseIntegerType(alloc, p) orelse return null;
+        _ = try parseIntegerType(alloc, p) orelse return error.MalformedWebIDL;
         return;
     }
     _ = try parseIntegerType(alloc, p) orelse return null;
