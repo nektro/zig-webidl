@@ -283,8 +283,8 @@ fn parsePartialInterfaceMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?v
     if (try parseIterable(alloc, p)) |_| return;
     if (try parseStaticMember(alloc, p)) |_| return;
     if (try parseStringifier(alloc, p)) |_| return;
-    if (try parseOperation(alloc, p)) |_| return;
     if (try parseConst(alloc, p)) |_| return;
+    if (try parseOperation(alloc, p)) |_| return;
     return null;
 }
 
