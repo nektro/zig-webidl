@@ -373,10 +373,10 @@ fn parseBooleanLiteral(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     Infinity
 //     NaN
 fn parseFloatLiteral(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parse_decimal(alloc, p)) |_| return;
     if (try parse_keyword(alloc, p, .@"-Infinity")) |_| return;
     if (try parse_keyword(alloc, p, .Infinity)) |_| return;
     if (try parse_keyword(alloc, p, .NaN)) |_| return;
+    if (try parse_decimal(alloc, p)) |_| return;
     return null;
 }
 
