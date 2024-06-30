@@ -1231,6 +1231,7 @@ fn parse_identifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?struct { usi
         cont = cont or try p.eatRange('0', '9') != null;
         cont = cont or try p.eatRange('A', 'Z') != null;
         cont = cont or try p.eatRange('a', 'z') != null;
+        cont = cont or try p.eatByte('_') != null;
         cont = cont or try p.eatByte('-') != null;
     }
     const end = p.parser.idx;
