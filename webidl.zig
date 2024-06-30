@@ -57,7 +57,7 @@ fn parseDefinitionsPrecise(alloc: std.mem.Allocator, p: *Parser, comptime E: typ
 // Definitions ::
 //     (ExtendedAttributeList? Definition)*
 fn parseDefinitions(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
-    try skip_whitespace(alloc, p);
+    try skip_whitespace(p);
     while (true) {
         _ = try parseExtendedAttributeList(alloc, p) orelse {};
         _ = try parseDefinition(alloc, p) orelse break;
@@ -550,10 +550,11 @@ fn parseArgumentName(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // Ellipsis ::
 //     ...
 fn parseEllipsis(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+    _ = alloc;
     _ = try p.eatByte('.') orelse return null;
     _ = try p.eatByte('.') orelse return error.MalformedWebIDL;
     _ = try p.eatByte('.') orelse return error.MalformedWebIDL;
-    try skip_whitespace(alloc, p);
+    try skip_whitespace(p);
 }
 
 // Constructor ::
@@ -1214,6 +1215,7 @@ fn parse_decimal(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 
 // identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*
 fn parse_identifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?struct { usize, usize, bool } {
+    _ = alloc;
     var start = p.parser.idx;
     var escaped = false;
 
@@ -1238,7 +1240,7 @@ fn parse_identifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?struct { usi
         cont = cont or try p.eatByte('-') != null;
     }
     const end = p.parser.idx;
-    try skip_whitespace(alloc, p);
+    try skip_whitespace(p);
     return .{ start, end, escaped };
 }
 
@@ -1251,7 +1253,7 @@ fn parse_string(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.StringIndex {
         p.parser.idx += 1;
     }
     const end = p.parser.idx;
-    try skip_whitespace(alloc, p);
+    try skip_whitespace(p);
     return try p.addStr(alloc, p.parser.temp.items[start..end]);
 }
 
@@ -1374,12 +1376,12 @@ const Keyword = enum {
 };
 
 fn parse_symbol(alloc: std.mem.Allocator, p: *Parser, comptime c: u8) !?void {
+    _ = alloc;
     _ = try p.eatByte(c) orelse return null;
-    try skip_whitespace(alloc, p);
+    try skip_whitespace(p);
 }
 
-fn skip_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
-    _ = alloc;
+fn skip_whitespace(p: *Parser) anyerror!void {
     while (try parse_whitespace(p) or try parse_comment(p)) {}
 }
 
