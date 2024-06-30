@@ -736,6 +736,7 @@ fn parseDictionaryMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     }
     if (try parseType(alloc, p)) |_| {
         _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
+        _ = try parseDefault(alloc, p);
         try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
         return;
     }
