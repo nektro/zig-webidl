@@ -1278,8 +1278,7 @@ fn parse_whitespace(p: *Parser) anyerror!bool {
 }
 
 // comment     =  \/\/.*|\/\*(.|\n)*?\*\/
-fn parse_comment(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
-    _ = alloc;
+fn parse_comment(p: *Parser) anyerror!bool {
     if (try p.eat("//")) |_| {
         _ = try p.eatUntil('\n') orelse return error.MalformedWebIDL;
         return true;
@@ -1387,7 +1386,8 @@ fn parse_symbol(alloc: std.mem.Allocator, p: *Parser, comptime c: u8) !?void {
 }
 
 fn skip_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
-    while (try parse_whitespace(p) or try parse_comment(alloc, p)) {}
+    _ = alloc;
+    while (try parse_whitespace(p) or try parse_comment(p)) {}
 }
 
 fn parse_name(alloc: std.mem.Allocator, p: *Parser) anyerror!?[2]usize {
