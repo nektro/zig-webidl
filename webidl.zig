@@ -1214,8 +1214,7 @@ fn parse_decimal(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 }
 
 // identifier  =  [_-]?[A-Za-z][0-9A-Z_a-z-]*
-fn parse_identifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?struct { usize, usize, bool } {
-    _ = alloc;
+fn parse_identifier(p: *Parser) anyerror!?struct { usize, usize, bool } {
     var start = p.parser.idx;
     var escaped = false;
 
@@ -1296,8 +1295,9 @@ fn parse_comment(p: *Parser) anyerror!bool {
 //
 
 fn parse_keyword(alloc: std.mem.Allocator, p: *Parser, s: Keyword) !?void {
+    _ = alloc;
     const start = p.parser.idx;
-    const s_start, const s_end, _ = try parse_identifier(alloc, p) orelse return null;
+    const s_start, const s_end, _ = try parse_identifier(p) orelse return null;
     const ident = p.parser.temp.items[s_start..s_end];
     if (std.mem.eql(u8, ident, @tagName(s))) return;
     p.parser.idx = start;
@@ -1386,7 +1386,8 @@ fn skip_whitespace(p: *Parser) anyerror!void {
 }
 
 fn parse_name(alloc: std.mem.Allocator, p: *Parser) anyerror!?[2]usize {
-    const start, const end, const escaped = try parse_identifier(alloc, p) orelse return null;
+    _ = alloc;
+    const start, const end, const escaped = try parse_identifier(p) orelse return null;
     const name = p.parser.temp.items[start..end];
     if (std.mem.eql(u8, name, "constructor")) return error.MalformedWebIDL;
     if (std.mem.eql(u8, name, "toString")) return error.MalformedWebIDL;
