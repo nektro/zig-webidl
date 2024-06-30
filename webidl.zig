@@ -158,13 +158,6 @@ fn parseArgumentNameKeyword(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
 //     MixinRest
 fn parseCallbackOrInterfaceOrMixin(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parse_keyword(alloc, p, .callback)) |_| {
-        if (try parse_name(alloc, p)) |_| {
-            try parse_symbol(alloc, p, '=') orelse return error.MalformedWebIDL;
-            _ = try parseType(alloc, p) orelse return error.MalformedWebIDL;
-            _ = try parseOptionalArgumentList(alloc, p) orelse return error.MalformedWebIDL;
-            try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
-            return;
-        }
         if (try parse_keyword(alloc, p, .interface)) |_| {
             _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
             try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
@@ -178,6 +171,13 @@ fn parseCallbackOrInterfaceOrMixin(alloc: std.mem.Allocator, p: *Parser) anyerro
             try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
             try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
 
+            return;
+        }
+        if (try parse_name(alloc, p)) |_| {
+            try parse_symbol(alloc, p, '=') orelse return error.MalformedWebIDL;
+            _ = try parseType(alloc, p) orelse return error.MalformedWebIDL;
+            _ = try parseOptionalArgumentList(alloc, p) orelse return error.MalformedWebIDL;
+            try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
             return;
         }
         return null;
