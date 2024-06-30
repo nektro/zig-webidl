@@ -1256,8 +1256,7 @@ fn parse_string(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.StringIndex {
 }
 
 // whitespace  =  [\t\n\r ]+
-fn parse_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!bool {
-    _ = alloc;
+fn parse_whitespace(p: *Parser) anyerror!bool {
     var ret = false;
     var old: usize = 0;
     var iteration: usize = 0;
@@ -1388,7 +1387,7 @@ fn parse_symbol(alloc: std.mem.Allocator, p: *Parser, comptime c: u8) !?void {
 }
 
 fn skip_whitespace(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
-    while (try parse_whitespace(alloc, p) or try parse_comment(alloc, p)) {}
+    while (try parse_whitespace(p) or try parse_comment(alloc, p)) {}
 }
 
 fn parse_name(alloc: std.mem.Allocator, p: *Parser) anyerror!?[2]usize {
