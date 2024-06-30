@@ -19,4 +19,25 @@ pub fn build(b: *std.Build) void {
         const test_step = b.step("test", "Run unit tests");
         test_step.dependOn(&run_unit_tests.step);
     }
+
+    {
+        const exe = b.addExecutable(.{
+            .name = "webidl-playground",
+            .root_source_file = b.path("main.zig"),
+            .target = target,
+            .optimize = mode,
+        });
+        deps.addAllTo(exe);
+
+        const run_cmd = b.addRunArtifact(exe);
+
+        run_cmd.step.dependOn(b.getInstallStep());
+
+        if (b.args) |args| {
+            run_cmd.addArgs(args);
+        }
+
+        const run_step = b.step("run", "Run the app");
+        run_step.dependOn(&run_cmd.step);
+    }
 }
