@@ -957,8 +957,11 @@ fn parseUnsignedIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
 fn parseIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parse_keyword(alloc, p, .short)) |_| return;
 
-    _ = try parse_keyword(alloc, p, .long) orelse return null;
-    _ = try parse_keyword(alloc, p, .long);
+    if (try parse_keyword(alloc, p, .long)) |_| {
+        if (try parse_keyword(alloc, p, .long)) |_| return;
+        return;
+    }
+    return null;
 }
 
 // StringType ::
