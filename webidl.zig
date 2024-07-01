@@ -233,8 +233,8 @@ fn parsePartial(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     PartialInterfaceRest
 //     MixinRest
 fn parsePartialInterfaceOrPartialMixin(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parsePartialInterfaceRest(alloc, p)) |_| return;
     if (try parseMixinRest(alloc, p)) |_| return;
+    if (try parsePartialInterfaceRest(alloc, p)) |_| return;
     return null;
 }
 
@@ -320,12 +320,14 @@ fn parseMixinRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     readonly? AttributeRest
 fn parseMixinMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parseConst(alloc, p)) |_| return;
-    if (try parseRegularOperation(alloc, p)) |_| return;
     if (try parseStringifier(alloc, p)) |_| return;
-
-    _ = try parse_keyword(p, .readonly);
-    _ = try parseAttributeRest(alloc, p) orelse return null;
-    return;
+    if (try parse_keyword(p, .readonly)) |_| {
+        _ = try parseAttributeRest(alloc, p) orelse return error.MalformedWebIDL;
+        return;
+    }
+    if (try parseAttributeRest(alloc, p)) |_| return;
+    if (try parseRegularOperation(alloc, p)) |_| return;
+    return null;
 }
 
 // IncludesStatement ::
