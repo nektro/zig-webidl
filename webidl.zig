@@ -964,13 +964,13 @@ fn parseUnsignedIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
 // IntegerType ::
 //     short
 //     long long?
-fn parseIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     _ = alloc;
-    if (try parse_keyword(p, .short)) |_| return;
+    if (try parse_keyword(p, .short)) |_| return .short;
 
     if (try parse_keyword(p, .long)) |_| {
-        if (try parse_keyword(p, .long)) |_| return;
-        return;
+        if (try parse_keyword(p, .long)) |_| return .long_long;
+        return .long;
     }
     return null;
 }

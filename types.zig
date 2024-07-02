@@ -6,6 +6,9 @@ pub const ValueIndex = enum(u32) {
     false = 2,
     type_float = 3,
     type_double = 5,
+    type_short = 7,
+    type_long = 9,
+    type_long_long = 11,
 
     _,
 };
@@ -32,10 +35,16 @@ pub const IdentifierIndex = enum(u32) {
 pub const TypeIndex = enum(u32) {
     float = 3,
     double = 5,
+    short = 7,
+    long = 9,
+    long_long = 11,
     _,
 };
 
 pub const Type = enum(u8) {
     float,
     double,
+    short,
+    long,
+    long_long,
 };
