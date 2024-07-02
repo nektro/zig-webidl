@@ -435,10 +435,10 @@ fn parseAttributeRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     identifier
 //     async
 //     required
-fn parseAttributeName(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parse_keyword(p, .@"async")) |_| return;
-    if (try parse_keyword(p, .required)) |_| return;
-    if (try parse_name(alloc, p)) |_| return;
+fn parseAttributeName(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IdentifierIndex {
+    if (try parse_keyword(p, .@"async")) |_| return try p.addIdentLiteral(alloc, "async");
+    if (try parse_keyword(p, .required)) |_| return try p.addIdentLiteral(alloc, "required");
+    if (try parse_name(alloc, p)) |id| return id;
     return null;
 }
 
