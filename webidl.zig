@@ -1162,7 +1162,7 @@ fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         return; //ExtendedAttributeWildcard
     }
     if (try parse_symbol(alloc, p, '(')) |_| {
-        var list = std.ArrayListUnmanaged(w.StringIndex){};
+        var list = std.ArrayListUnmanaged(w.IdentifierIndex){};
         defer list.deinit(alloc);
         try list.append(alloc, try p.addIdent(alloc, try parse_name(alloc, p) orelse return error.MalformedWebIDL));
         while (true) {

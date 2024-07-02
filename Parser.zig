@@ -56,7 +56,7 @@ const Adapter = struct {
     }
 };
 
-pub fn addIdent(p: *Parser, alloc: std.mem.Allocator, id: [2]usize) !StringIndex {
+pub fn addIdent(p: *Parser, alloc: std.mem.Allocator, id: [2]usize) !w.IdentifierIndex {
     const start, const end = id;
-    return p.addStr(alloc, p.parser.temp.items[start..end]);
+    return @enumFromInt(@intFromEnum(try p.addStr(alloc, p.parser.temp.items[start..end])));
 }
