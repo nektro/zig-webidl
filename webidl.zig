@@ -926,8 +926,9 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
 //     octet
 //     bigint
 fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parseUnsignedIntegerType(alloc, p)) |_| return;
-    if (try parseUnrestrictedFloatType(alloc, p)) |_| return;
+    _ = alloc;
+    if (try parseUnsignedIntegerType(p)) |_| return;
+    if (try parseUnrestrictedFloatType(p)) |_| return;
     if (try parse_keyword(p, .boolean)) |_| return;
     if (try parse_keyword(p, .byte)) |_| return;
     if (try parse_keyword(p, .octet)) |_| return;
@@ -938,8 +939,7 @@ fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // UnrestrictedFloatType ::
 //     unrestricted FloatType
 //     FloatType
-fn parseUnrestrictedFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
-    _ = alloc;
+fn parseUnrestrictedFloatType(p: *Parser) anyerror!?w.TypeIndex {
     if (try parse_keyword(p, .unrestricted)) |_| {
         const t = try parseFloatType(p) orelse return error.MalformedWebIDL;
         return switch (t) {
@@ -964,8 +964,7 @@ fn parseFloatType(p: *Parser) anyerror!?w.TypeIndex {
 // UnsignedIntegerType ::
 //     unsigned IntegerType
 //     IntegerType
-fn parseUnsignedIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
-    _ = alloc;
+fn parseUnsignedIntegerType(p: *Parser) anyerror!?w.TypeIndex {
     if (try parse_keyword(p, .unsigned)) |_| {
         const t = try parseIntegerType(p) orelse return error.MalformedWebIDL;
         return switch (t) {
