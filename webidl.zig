@@ -547,9 +547,9 @@ fn parseArgument(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // ArgumentName ::
 //     ArgumentNameKeyword
 //     identifier
-fn parseArgumentName(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parseArgumentNameKeyword(alloc, p)) |_| return;
-    if (try parse_name(alloc, p)) |_| return; //
+fn parseArgumentName(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IdentifierIndex {
+    if (try parseArgumentNameKeyword(alloc, p)) |id| return id;
+    if (try parse_name(alloc, p)) |id| return id;
     return null;
 }
 
