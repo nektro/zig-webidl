@@ -1219,13 +1219,10 @@ fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 
 // integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)
 fn parse_integer(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IntegerIndex {
-    var start = p.parser.idx;
-    const is_negative = try p.eatByte('-') != null;
-    if (is_negative) start += 1;
+    const start = p.parser.idx;
+    _ = try p.eatByte('-');
     if (try p.eatByte('0')) |_| {
-        start += 1;
         if (try p.eatAnyScalar("xX")) |_| {
-            start += 1;
             var at_least_one = false;
             while (true) {
                 if (try p.eatRange('0', '9') != null or try p.eatRange('A', 'F') != null or try p.eatRange('a', 'f') != null) {
@@ -1236,17 +1233,16 @@ fn parse_integer(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IntegerIndex 
             }
             if (!at_least_one) return error.MalformedWebIDL;
             const end = p.parser.idx;
-            return try p.addInteger(alloc, is_negative, .{ start, end }, 16);
+            return try p.addInteger(alloc, .{ start, end }, 16);
         }
         while (try p.eatRange('0', '7')) |_| {}
         const end = p.parser.idx;
-        if (start == end) start -= 1;
-        return try p.addInteger(alloc, is_negative, .{ start, end }, 8);
+        return try p.addInteger(alloc, .{ start, end }, 8);
     }
     _ = try p.eatRange('1', '9') orelse return null;
     while (try p.eatRange('0', '9')) |_| {}
     const end = p.parser.idx;
-    return try p.addInteger(alloc, is_negative, .{ start, end }, 10);
+    return try p.addInteger(alloc, .{ start, end }, 10);
 }
 
 // decimal     =  -?(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([Ee][+-]?[0-9]+)?|[0-9]+[Ee][+-]?[0-9]+)
