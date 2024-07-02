@@ -60,3 +60,7 @@ pub fn addIdent(p: *Parser, alloc: std.mem.Allocator, id: [2]usize) !w.Identifie
     const start, const end = id;
     return @enumFromInt(@intFromEnum(try p.addStr(alloc, p.parser.temp.items[start..end])));
 }
+
+pub fn addIdentLiteral(p: *Parser, alloc: std.mem.Allocator, id: []const u8) !w.IdentifierIndex {
+    return @enumFromInt(@intFromEnum(try p.addStr(alloc, id)));
+}
