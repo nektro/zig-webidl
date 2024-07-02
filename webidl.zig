@@ -1218,7 +1218,7 @@ fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //
 
 // integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)
-fn parse_integer(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IntegerIndex {
+fn parse_integer(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.ValueIndex {
     const start = p.parser.idx;
     _ = try p.eatByte('-');
     if (try p.eatByte('0')) |_| {

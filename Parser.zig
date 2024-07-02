@@ -88,7 +88,7 @@ pub fn addEnum(p: *Parser, alloc: std.mem.Allocator, name: w.IdentifierIndex, fi
 }
 
 // tag(u8) + base(u8) + str(StringIndex)(u32)
-pub fn addInteger(p: *Parser, alloc: std.mem.Allocator, loc: [2]usize, base: u8) !w.IntegerIndex {
+pub fn addInteger(p: *Parser, alloc: std.mem.Allocator, loc: [2]usize, base: u8) !w.ValueIndex {
     const r = p.parser.data.items.len;
     try p.parser.data.ensureUnusedCapacity(alloc, 1 + 1 + 4);
     p.parser.data.appendAssumeCapacity(@intFromEnum(w.Value.Tag.integer));
