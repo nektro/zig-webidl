@@ -883,7 +883,7 @@ fn parseUnionMemberType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         return;
     }
     _ = try parseUnionType(alloc, p) orelse return null;
-    _ = try parseNull(alloc, p);
+    _ = try parse_symbol(p, '?');
 }
 
 // DistinguishableType ::
@@ -1027,13 +1027,6 @@ fn parseRecordType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_symbol(p, ',') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
     try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
-}
-
-// Null? ::
-//     ?
-fn parseNull(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    _ = alloc;
-    return parse_symbol(p, '?');
 }
 
 // BufferRelatedType ::
