@@ -402,9 +402,9 @@ fn parseFloatLiteral(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // ConstType ::
 //     PrimitiveType
 //     identifier
-fn parseConstType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parsePrimitiveType(p)) |_| return;
-    if (try parse_name(alloc, p)) |_| return;
+fn parseConstType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
+    if (try parsePrimitiveType(p)) |y| return y;
+    if (try parse_name(alloc, p)) |id| return try p.addNamedType(alloc, id);
     return null;
 }
 

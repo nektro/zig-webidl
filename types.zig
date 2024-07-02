@@ -75,4 +75,5 @@ pub const Type = enum(u8) {
     byte,
     octet,
     bigint,
+    named,
 };

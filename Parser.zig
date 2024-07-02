@@ -64,3 +64,13 @@ pub fn addIdent(p: *Parser, alloc: std.mem.Allocator, id: [2]usize) !w.Identifie
 pub fn addIdentLiteral(p: *Parser, alloc: std.mem.Allocator, id: []const u8) !w.IdentifierIndex {
     return @enumFromInt(@intFromEnum(try p.addStr(alloc, id)));
 }
+
+// tagValue(u8) + tagType(u8) + id(IdentifierIndex)(u32)
+pub fn addNamedType(p: *Parser, alloc: std.mem.Allocator, id: w.IdentifierIndex) !w.TypeIndex {
+    const r = p.parser.data.items.len;
+    try p.parser.data.ensureUnusedCapacity(alloc, 6);
+    p.parser.data.appendAssumeCapacity(@intFromEnum(w.Value.Tag.type));
+    p.parser.data.appendAssumeCapacity(@intFromEnum(w.Type.named));
+    p.parser.data.appendSliceAssumeCapacity(&std.mem.toBytes(id));
+    return @enumFromInt(r);
+}
