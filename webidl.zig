@@ -35,6 +35,9 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.long_long) }); // 11
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unrestricted_float) }); // 13
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unrestricted_double) }); // 15
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unsigned_short) }); // 17
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unsigned_long) }); // 19
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unsigned_long_long) }); // 21
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
@@ -961,14 +964,19 @@ fn parseFloatType(p: *Parser) anyerror!?w.TypeIndex {
 // UnsignedIntegerType ::
 //     unsigned IntegerType
 //     IntegerType
-fn parseUnsignedIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseUnsignedIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     _ = alloc;
     if (try parse_keyword(p, .unsigned)) |_| {
-        _ = try parseIntegerType(p) orelse return error.MalformedWebIDL;
-        return;
+        const t = try parseIntegerType(p) orelse return error.MalformedWebIDL;
+        return switch (t) {
+            .short => .unsigned_short,
+            .long => .unsigned_long,
+            .long_long => .unsigned_long_long,
+            else => unreachable,
+        };
     }
-    _ = try parseIntegerType(p) orelse return null;
-    return;
+    const t = try parseIntegerType(p) orelse return null;
+    return t;
 }
 
 // IntegerType ::
