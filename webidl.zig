@@ -30,6 +30,9 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     p.parser.data.appendAssumeCapacity(@intFromEnum(Value.Tag.false)); // 2
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.float) }); // 3
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.double) }); // 5
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.short) }); // 7
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.long) }); // 9
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.long_long) }); // 11
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
