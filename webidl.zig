@@ -109,33 +109,32 @@ fn parseDefinition(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     stringifier
 //     typedef
 //     unrestricted
-fn parseArgumentNameKeyword(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    _ = alloc;
-    if (try parse_keyword(p, .@"async")) |_| return;
-    if (try parse_keyword(p, .attribute)) |_| return;
-    if (try parse_keyword(p, .callback)) |_| return;
-    if (try parse_keyword(p, .@"const")) |_| return;
-    if (try parse_keyword(p, .constructor)) |_| return;
-    if (try parse_keyword(p, .deleter)) |_| return;
-    if (try parse_keyword(p, .dictionary)) |_| return;
-    if (try parse_keyword(p, .@"enum")) |_| return;
-    if (try parse_keyword(p, .getter)) |_| return;
-    if (try parse_keyword(p, .includes)) |_| return;
-    if (try parse_keyword(p, .inherit)) |_| return;
-    if (try parse_keyword(p, .interface)) |_| return;
-    if (try parse_keyword(p, .iterable)) |_| return;
-    if (try parse_keyword(p, .maplike)) |_| return;
-    if (try parse_keyword(p, .mixin)) |_| return;
-    if (try parse_keyword(p, .namespace)) |_| return;
-    if (try parse_keyword(p, .partial)) |_| return;
-    if (try parse_keyword(p, .readonly)) |_| return;
-    if (try parse_keyword(p, .required)) |_| return;
-    if (try parse_keyword(p, .setlike)) |_| return;
-    if (try parse_keyword(p, .setter)) |_| return;
-    if (try parse_keyword(p, .static)) |_| return;
-    if (try parse_keyword(p, .stringifier)) |_| return;
-    if (try parse_keyword(p, .typedef)) |_| return;
-    if (try parse_keyword(p, .unrestricted)) |_| return;
+fn parseArgumentNameKeyword(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IdentifierIndex {
+    if (try parse_keyword(p, .@"async")) |_| return try p.addIdentLiteral(alloc, "async");
+    if (try parse_keyword(p, .attribute)) |_| return try p.addIdentLiteral(alloc, "attribute");
+    if (try parse_keyword(p, .callback)) |_| return try p.addIdentLiteral(alloc, "callback");
+    if (try parse_keyword(p, .@"const")) |_| return try p.addIdentLiteral(alloc, "const");
+    if (try parse_keyword(p, .constructor)) |_| return try p.addIdentLiteral(alloc, "constructor");
+    if (try parse_keyword(p, .deleter)) |_| return try p.addIdentLiteral(alloc, "deleter");
+    if (try parse_keyword(p, .dictionary)) |_| return try p.addIdentLiteral(alloc, "dictionary");
+    if (try parse_keyword(p, .@"enum")) |_| return try p.addIdentLiteral(alloc, "enum");
+    if (try parse_keyword(p, .getter)) |_| return try p.addIdentLiteral(alloc, "getter");
+    if (try parse_keyword(p, .includes)) |_| return try p.addIdentLiteral(alloc, "includes");
+    if (try parse_keyword(p, .inherit)) |_| return try p.addIdentLiteral(alloc, "inherit");
+    if (try parse_keyword(p, .interface)) |_| return try p.addIdentLiteral(alloc, "interface");
+    if (try parse_keyword(p, .iterable)) |_| return try p.addIdentLiteral(alloc, "iterable");
+    if (try parse_keyword(p, .maplike)) |_| return try p.addIdentLiteral(alloc, "maplike");
+    if (try parse_keyword(p, .mixin)) |_| return try p.addIdentLiteral(alloc, "mixin");
+    if (try parse_keyword(p, .namespace)) |_| return try p.addIdentLiteral(alloc, "namespace");
+    if (try parse_keyword(p, .partial)) |_| return try p.addIdentLiteral(alloc, "partial");
+    if (try parse_keyword(p, .readonly)) |_| return try p.addIdentLiteral(alloc, "readonly");
+    if (try parse_keyword(p, .required)) |_| return try p.addIdentLiteral(alloc, "required");
+    if (try parse_keyword(p, .setlike)) |_| return try p.addIdentLiteral(alloc, "setlike");
+    if (try parse_keyword(p, .setter)) |_| return try p.addIdentLiteral(alloc, "setter");
+    if (try parse_keyword(p, .static)) |_| return try p.addIdentLiteral(alloc, "static");
+    if (try parse_keyword(p, .stringifier)) |_| return try p.addIdentLiteral(alloc, "stringifier");
+    if (try parse_keyword(p, .typedef)) |_| return try p.addIdentLiteral(alloc, "typedef");
+    if (try parse_keyword(p, .unrestricted)) |_| return try p.addIdentLiteral(alloc, "unrestricted");
     return null;
 }
 
