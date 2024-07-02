@@ -45,6 +45,20 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.ByteString) }); // 31
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.DOMString) }); // 33
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.USVString) }); // 35
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.ArrayBuffer) }); // 37
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.SharedArrayBuffer) }); // 39
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.DataView) }); // 41
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Int8Array) }); // 43
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Int16Array) }); // 45
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Int32Array) }); // 47
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Uint8Array) }); // 49
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Uint16Array) }); // 51
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Uint32Array) }); // 53
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Uint8ClampedArray) }); // 55
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.BigInt64Array) }); // 57
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.BigUint64Array) }); // 59
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Float32Array) }); // 61
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.Float64Array) }); // 63
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
@@ -1044,22 +1058,22 @@ fn parseRecordType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     BigUint64Array
 //     Float32Array
 //     Float64Array
-fn parseBufferRelatedType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseBufferRelatedType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     _ = alloc;
-    if (try parse_keyword(p, .ArrayBuffer)) |_| return;
-    if (try parse_keyword(p, .SharedArrayBuffer)) |_| return;
-    if (try parse_keyword(p, .DataView)) |_| return;
-    if (try parse_keyword(p, .Int8Array)) |_| return;
-    if (try parse_keyword(p, .Int16Array)) |_| return;
-    if (try parse_keyword(p, .Int32Array)) |_| return;
-    if (try parse_keyword(p, .Uint8Array)) |_| return;
-    if (try parse_keyword(p, .Uint16Array)) |_| return;
-    if (try parse_keyword(p, .Uint32Array)) |_| return;
-    if (try parse_keyword(p, .Uint8ClampedArray)) |_| return;
-    if (try parse_keyword(p, .BigInt64Array)) |_| return;
-    if (try parse_keyword(p, .BigUint64Array)) |_| return;
-    if (try parse_keyword(p, .Float32Array)) |_| return;
-    if (try parse_keyword(p, .Float64Array)) |_| return;
+    if (try parse_keyword(p, .ArrayBuffer)) |_| return .ArrayBuffer;
+    if (try parse_keyword(p, .SharedArrayBuffer)) |_| return .SharedArrayBuffer;
+    if (try parse_keyword(p, .DataView)) |_| return .DataView;
+    if (try parse_keyword(p, .Int8Array)) |_| return .Int8Array;
+    if (try parse_keyword(p, .Int16Array)) |_| return .Int16Array;
+    if (try parse_keyword(p, .Int32Array)) |_| return .Int32Array;
+    if (try parse_keyword(p, .Uint8Array)) |_| return .Uint8Array;
+    if (try parse_keyword(p, .Uint16Array)) |_| return .Uint16Array;
+    if (try parse_keyword(p, .Uint32Array)) |_| return .Uint32Array;
+    if (try parse_keyword(p, .Uint8ClampedArray)) |_| return .Uint8ClampedArray;
+    if (try parse_keyword(p, .BigInt64Array)) |_| return .BigInt64Array;
+    if (try parse_keyword(p, .BigUint64Array)) |_| return .BigUint64Array;
+    if (try parse_keyword(p, .Float32Array)) |_| return .Float32Array;
+    if (try parse_keyword(p, .Float64Array)) |_| return .Float64Array;
     return null;
 }
 
