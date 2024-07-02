@@ -794,9 +794,9 @@ fn parseDefault(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     enum identifier { EnumValueList } ;
 // EnumValueList ::
 //     string (, string)*
-fn parseEnum(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseEnum(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     try parse_keyword(p, .@"enum") orelse return null;
-    _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
+    const name = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
     try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
 
     var list = std.ArrayListUnmanaged(w.StringIndex){};
@@ -809,6 +809,7 @@ fn parseEnum(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     }
     try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
     try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
+    return try p.addEnum(alloc, name, list.items);
 }
 
 // Typedef ::

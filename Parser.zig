@@ -74,3 +74,15 @@ pub fn addNamedType(p: *Parser, alloc: std.mem.Allocator, id: w.IdentifierIndex)
     p.parser.data.appendSliceAssumeCapacity(&std.mem.toBytes(id));
     return @enumFromInt(r);
 }
+
+// tagValue(u8) + tagType(u8) + id(IdentifierIndex)(u32) + len(u32) + fields(StringIndex)(u32)*len
+pub fn addEnum(p: *Parser, alloc: std.mem.Allocator, name: w.IdentifierIndex, fields: []const w.StringIndex) !w.TypeIndex {
+    const r = p.parser.data.items.len;
+    try p.parser.data.ensureUnusedCapacity(alloc, 1 + 1 + 4 + 4 + (4 * fields.len));
+    p.parser.data.appendAssumeCapacity(@intFromEnum(w.Value.Tag.type));
+    p.parser.data.appendAssumeCapacity(@intFromEnum(w.Type.enumeration));
+    p.parser.data.appendSliceAssumeCapacity(&std.mem.toBytes(name));
+    p.parser.data.appendSliceAssumeCapacity(&std.mem.toBytes(@as(u32, @intCast(fields.len))));
+    p.parser.data.appendSliceAssumeCapacity(std.mem.sliceAsBytes(fields));
+    return @enumFromInt(r);
+}
