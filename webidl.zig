@@ -931,19 +931,19 @@ fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     unrestricted FloatType
 //     FloatType
 fn parseUnrestrictedFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+    _ = alloc;
     if (try parse_keyword(p, .unrestricted)) |_| {
-        _ = try parseFloatType(alloc, p) orelse return error.MalformedWebIDL;
+        _ = try parseFloatType(p) orelse return error.MalformedWebIDL;
         return;
     }
-    _ = try parseFloatType(alloc, p) orelse return null;
+    _ = try parseFloatType(p) orelse return null;
     return;
 }
 
 // FloatType ::
 //     float
 //     double
-fn parseFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
-    _ = alloc;
+fn parseFloatType(p: *Parser) anyerror!?w.TypeIndex {
     if (try parse_keyword(p, .float)) |_| return .float;
     if (try parse_keyword(p, .double)) |_| return .double;
     return null;
@@ -953,19 +953,19 @@ fn parseFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
 //     unsigned IntegerType
 //     IntegerType
 fn parseUnsignedIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+    _ = alloc;
     if (try parse_keyword(p, .unsigned)) |_| {
-        _ = try parseIntegerType(alloc, p) orelse return error.MalformedWebIDL;
+        _ = try parseIntegerType(p) orelse return error.MalformedWebIDL;
         return;
     }
-    _ = try parseIntegerType(alloc, p) orelse return null;
+    _ = try parseIntegerType(p) orelse return null;
     return;
 }
 
 // IntegerType ::
 //     short
 //     long long?
-fn parseIntegerType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
-    _ = alloc;
+fn parseIntegerType(p: *Parser) anyerror!?w.TypeIndex {
     if (try parse_keyword(p, .short)) |_| return .short;
 
     if (try parse_keyword(p, .long)) |_| {
