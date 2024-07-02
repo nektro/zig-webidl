@@ -26,6 +26,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     comptime std.debug.assert(@intFromEnum(Value.zero) == 0);
     try p.parser.data.ensureUnusedCapacity(alloc, 4096);
     p.parser.data.appendAssumeCapacity(@intFromEnum(Value.Tag.zero));
+    p.parser.data.appendAssumeCapacity(@intFromEnum(Value.Tag.true)); // 1
+    p.parser.data.appendAssumeCapacity(@intFromEnum(Value.Tag.false)); // 2
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
@@ -363,10 +365,10 @@ fn parseConstValue(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // BooleanLiteral ::
 //     true
 //     false
-fn parseBooleanLiteral(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseBooleanLiteral(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.ValueIndex {
     _ = alloc;
-    if (try parse_keyword(p, .true)) |_| return;
-    if (try parse_keyword(p, .false)) |_| return;
+    if (try parse_keyword(p, .true)) |_| return .true;
+    if (try parse_keyword(p, .false)) |_| return .false;
     return null;
 }
 
