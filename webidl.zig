@@ -290,9 +290,9 @@ fn parsePartialInterfaceMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?v
 
 // Inheritance ::
 //     : identifier
-fn parseInheritance(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseInheritance(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IdentifierIndex {
     try parse_symbol(alloc, p, ':') orelse return null;
-    _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
+    return try parse_name(alloc, p) orelse return error.MalformedWebIDL;
 }
 
 // MixinRest ::
