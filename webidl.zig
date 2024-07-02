@@ -932,7 +932,7 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
         if (try parse_keyword(p, .undefined)) |_| break :blk;
         if (try parsePrimitiveType(p)) |_| break :blk;
         if (try parseStringType(p)) |_| break :blk;
-        if (try parseBufferRelatedType(alloc, p)) |_| break :blk;
+        if (try parseBufferRelatedType(p)) |_| break :blk;
         if (try parseRecordType(alloc, p)) |_| break :blk;
         if (try parse_name(alloc, p)) |_| break :blk;
         return null;
@@ -1058,8 +1058,7 @@ fn parseRecordType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     BigUint64Array
 //     Float32Array
 //     Float64Array
-fn parseBufferRelatedType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
-    _ = alloc;
+fn parseBufferRelatedType(p: *Parser) anyerror!?w.TypeIndex {
     if (try parse_keyword(p, .ArrayBuffer)) |_| return .ArrayBuffer;
     if (try parse_keyword(p, .SharedArrayBuffer)) |_| return .SharedArrayBuffer;
     if (try parse_keyword(p, .DataView)) |_| return .DataView;
