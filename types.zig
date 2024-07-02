@@ -14,6 +14,10 @@ pub const ValueIndex = enum(u32) {
     type_unsigned_short = 17,
     type_unsigned_long = 19,
     type_unsigned_long_long = 21,
+    type_boolean = 23,
+    type_byte = 25,
+    type_octet = 27,
+    type_bigint = 29,
 
     _,
 };
@@ -48,6 +52,10 @@ pub const TypeIndex = enum(u32) {
     unsigned_short = 17,
     unsigned_long = 19,
     unsigned_long_long = 21,
+    boolean = 23,
+    byte = 25,
+    octet = 27,
+    bigint = 29,
 
     _,
 };
@@ -63,4 +71,8 @@ pub const Type = enum(u8) {
     unsigned_short,
     unsigned_long,
     unsigned_long_long,
+    boolean,
+    byte,
+    octet,
+    bigint,
 };

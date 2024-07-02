@@ -38,6 +38,10 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unsigned_short) }); // 17
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unsigned_long) }); // 19
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unsigned_long_long) }); // 21
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.boolean) }); // 23
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.byte) }); // 25
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.octet) }); // 27
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.bigint) }); // 29
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
@@ -925,14 +929,14 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
 //     byte
 //     octet
 //     bigint
-fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     _ = alloc;
-    if (try parseUnsignedIntegerType(p)) |_| return;
-    if (try parseUnrestrictedFloatType(p)) |_| return;
-    if (try parse_keyword(p, .boolean)) |_| return;
-    if (try parse_keyword(p, .byte)) |_| return;
-    if (try parse_keyword(p, .octet)) |_| return;
-    if (try parse_keyword(p, .bigint)) |_| return;
+    if (try parseUnsignedIntegerType(p)) |y| return y;
+    if (try parseUnrestrictedFloatType(p)) |y| return y;
+    if (try parse_keyword(p, .boolean)) |_| return .boolean;
+    if (try parse_keyword(p, .byte)) |_| return .byte;
+    if (try parse_keyword(p, .octet)) |_| return .octet;
+    if (try parse_keyword(p, .bigint)) |_| return .bigint;
     return null;
 }
 
