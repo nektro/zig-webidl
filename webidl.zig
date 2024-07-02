@@ -517,9 +517,9 @@ fn parseOperationRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // OperationName ::
 //     includes
 //     identifier
-fn parseOperationName(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parse_keyword(p, .includes)) |_| return;
-    if (try parse_name(alloc, p)) |_| return; //
+fn parseOperationName(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IdentifierIndex {
+    if (try parse_keyword(p, .includes)) |_| return try p.addIdentLiteral(alloc, "includes");
+    if (try parse_name(alloc, p)) |id| return id;
     return null;
 }
 
