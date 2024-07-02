@@ -2,7 +2,7 @@ id: zrl8yxla07afjtck0iwixj7mextbf4qjybw2tna37xs4iqlj
 name: webidl
 main: webidl.zig
 license: MPL-2.0
-description: Pure-Zig WebIDL parser.
+description: Pure Zig parser for WebIDL.
 dependencies:
   - src: git https://github.com/nektro/zig-extras
   - src: git https://github.com/nektro/zig-tracer
