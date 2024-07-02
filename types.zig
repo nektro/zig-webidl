@@ -46,6 +46,7 @@ pub const Value = union(enum(u8)) {
     true,
     false,
     type: TypeIndex,
+    integer: IntegerIndex,
 
     pub const Tag = std.meta.Tag(@This());
 };
@@ -128,4 +129,8 @@ pub const Type = enum(u8) {
     BigUint64Array,
     Float32Array,
     Float64Array,
+};
+
+pub const IntegerIndex = enum(u32) {
+    _,
 };

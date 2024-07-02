@@ -86,3 +86,22 @@ pub fn addEnum(p: *Parser, alloc: std.mem.Allocator, name: w.IdentifierIndex, fi
     p.parser.data.appendSliceAssumeCapacity(std.mem.sliceAsBytes(fields));
     return @enumFromInt(r);
 }
+
+// tagValue(u8) + int(u64)
+pub fn addInteger(p: *Parser, alloc: std.mem.Allocator, is_neg: bool, loc: [2]usize, base: u8) !w.IntegerIndex {
+    const r = p.parser.data.items.len;
+    const start, const end = loc;
+    const str = p.parser.temp.items[start..end];
+    std.log.warn("int {d} {d}:{s}", .{ base, str.len, str });
+    const int = std.fmt.parseInt(u64, str, base) catch unreachable;
+    try p.parser.data.ensureUnusedCapacity(alloc, 1 + 8);
+    p.parser.data.appendAssumeCapacity(@intFromEnum(w.Value.Tag.integer));
+    if (is_neg) {
+        var real_int: isize = @intCast(int);
+        real_int = -real_int;
+        p.parser.data.appendSliceAssumeCapacity(&std.mem.toBytes(real_int));
+    } else {
+        p.parser.data.appendSliceAssumeCapacity(&std.mem.toBytes(int));
+    }
+    return @enumFromInt(r);
+}
