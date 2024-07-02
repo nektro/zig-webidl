@@ -1136,8 +1136,9 @@ fn parseExtendedAttributeList(alloc: std.mem.Allocator, p: *Parser) anyerror!?vo
 //     identifier = identifier ( ArgumentList )
 
 fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    const name_start, const name_end = try parse_name(alloc, p) orelse return null;
-    const name = p.parser.temp.items[name_start..name_end];
+    const name_index = try parse_name(alloc, p) orelse return null;
+    const name_len: u32 = @bitCast(p.parser.data.items[@intFromEnum(name_index)..][1..5].*);
+    const name = p.parser.data.items[@intFromEnum(name_index)..][5..][0..name_len];
     {
         if (std.mem.eql(u8, name, "LenientSetter")) try p.warnings.append(alloc, "Renamed to [LegacyLenientSetter]; see https://github.com/whatwg/webidl/pull/870");
         if (std.mem.eql(u8, name, "LenientThis")) try p.warnings.append(alloc, "Renamed to [LegacyLenientThis]; see https://github.com/whatwg/webidl/pull/870");
@@ -1163,10 +1164,10 @@ fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parse_symbol(alloc, p, '(')) |_| {
         var list = std.ArrayListUnmanaged(w.IdentifierIndex){};
         defer list.deinit(alloc);
-        try list.append(alloc, try p.addIdent(alloc, try parse_name(alloc, p) orelse return error.MalformedWebIDL));
+        try list.append(alloc, try parse_name(alloc, p) orelse return error.MalformedWebIDL);
         while (true) {
             _ = try parse_symbol(alloc, p, ',') orelse break;
-            try list.append(alloc, try p.addIdent(alloc, try parse_name(alloc, p) orelse return error.MalformedWebIDL));
+            try list.append(alloc, try parse_name(alloc, p) orelse return error.MalformedWebIDL);
         }
         _ = try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
         return; //ExtendedAttributeIdentList
@@ -1392,13 +1393,12 @@ fn skip_whitespace(p: *Parser) anyerror!void {
     while (try parse_whitespace(p) or try parse_comment(p)) {}
 }
 
-fn parse_name(alloc: std.mem.Allocator, p: *Parser) anyerror!?[2]usize {
-    _ = alloc;
+fn parse_name(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IdentifierIndex {
     const start, const end, const escaped = try parse_identifier(p) orelse return null;
     const name = p.parser.temp.items[start..end];
     if (std.mem.eql(u8, name, "constructor")) return error.MalformedWebIDL;
     if (std.mem.eql(u8, name, "toString")) return error.MalformedWebIDL;
     @setEvalBranchQuota(10_000);
     if (!escaped and std.meta.stringToEnum(Keyword, name) != null) return error.MalformedWebIDL;
-    return .{ start, end };
+    return try p.addIdent(alloc, .{ start, end });
 }
