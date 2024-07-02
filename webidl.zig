@@ -403,7 +403,7 @@ fn parseFloatLiteral(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     PrimitiveType
 //     identifier
 fn parseConstType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    if (try parsePrimitiveType(alloc, p)) |_| return;
+    if (try parsePrimitiveType(p)) |_| return;
     if (try parse_name(alloc, p)) |_| return;
     return null;
 }
@@ -912,7 +912,7 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
         if (try parse_keyword(p, .object)) |_| break :blk;
         if (try parse_keyword(p, .symbol)) |_| break :blk;
         if (try parse_keyword(p, .undefined)) |_| break :blk;
-        if (try parsePrimitiveType(alloc, p)) |_| break :blk;
+        if (try parsePrimitiveType(p)) |_| break :blk;
         if (try parseStringType(alloc, p)) |_| break :blk;
         if (try parseBufferRelatedType(alloc, p)) |_| break :blk;
         if (try parseRecordType(alloc, p)) |_| break :blk;
@@ -929,8 +929,7 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
 //     byte
 //     octet
 //     bigint
-fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
-    _ = alloc;
+fn parsePrimitiveType(p: *Parser) anyerror!?w.TypeIndex {
     if (try parseUnsignedIntegerType(p)) |y| return y;
     if (try parseUnrestrictedFloatType(p)) |y| return y;
     if (try parse_keyword(p, .boolean)) |_| return .boolean;
