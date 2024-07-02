@@ -28,6 +28,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     p.parser.data.appendAssumeCapacity(@intFromEnum(Value.Tag.zero));
     p.parser.data.appendAssumeCapacity(@intFromEnum(Value.Tag.true)); // 1
     p.parser.data.appendAssumeCapacity(@intFromEnum(Value.Tag.false)); // 2
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.float) }); // 3
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.double) }); // 5
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
@@ -940,10 +942,10 @@ fn parseUnrestrictedFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?vo
 // FloatType ::
 //     float
 //     double
-fn parseFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     _ = alloc;
-    if (try parse_keyword(p, .float)) |_| return;
-    if (try parse_keyword(p, .double)) |_| return;
+    if (try parse_keyword(p, .float)) |_| return .float;
+    if (try parse_keyword(p, .double)) |_| return .double;
     return null;
 }
 
