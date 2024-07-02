@@ -18,6 +18,9 @@ pub const ValueIndex = enum(u32) {
     type_byte = 25,
     type_octet = 27,
     type_bigint = 29,
+    type_ByteString = 31,
+    type_DOMString = 33,
+    type_USVString = 35,
 
     _,
 };
@@ -56,6 +59,9 @@ pub const TypeIndex = enum(u32) {
     byte = 25,
     octet = 27,
     bigint = 29,
+    ByteString = 31,
+    DOMString = 33,
+    USVString = 35,
 
     _,
 };
@@ -77,4 +83,7 @@ pub const Type = enum(u8) {
     bigint,
     named,
     enumeration,
+    ByteString,
+    DOMString,
+    USVString,
 };

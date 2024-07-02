@@ -42,6 +42,9 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.byte) }); // 25
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.octet) }); // 27
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.bigint) }); // 29
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.ByteString) }); // 31
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.DOMString) }); // 33
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.USVString) }); // 35
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
@@ -999,11 +1002,11 @@ fn parseIntegerType(p: *Parser) anyerror!?w.TypeIndex {
 //     ByteString
 //     DOMString
 //     USVString
-fn parseStringType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseStringType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     _ = alloc;
-    if (try parse_keyword(p, .ByteString)) |_| return;
-    if (try parse_keyword(p, .DOMString)) |_| return;
-    if (try parse_keyword(p, .USVString)) |_| return;
+    if (try parse_keyword(p, .ByteString)) |_| return .ByteString;
+    if (try parse_keyword(p, .DOMString)) |_| return .DOMString;
+    if (try parse_keyword(p, .USVString)) |_| return .USVString;
     return null;
 }
 
