@@ -176,7 +176,7 @@ fn parseCallbackOrInterfaceOrMixin(alloc: std.mem.Allocator, p: *Parser) anyerro
     if (try parse_keyword(p, .callback)) |_| {
         if (try parse_keyword(p, .interface)) |_| {
             _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-            try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+            try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
             while (true) {
                 _ = try parseExtendedAttributeList(alloc, p);
 
@@ -184,16 +184,16 @@ fn parseCallbackOrInterfaceOrMixin(alloc: std.mem.Allocator, p: *Parser) anyerro
                 if (try parseRegularOperation(alloc, p)) |_| continue;
                 break;
             }
-            try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-            try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+            try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+            try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 
             return;
         }
         if (try parse_name(alloc, p)) |_| {
-            try parse_symbol(alloc, p, '=') orelse return error.MalformedWebIDL;
+            try parse_symbol(p, '=') orelse return error.MalformedWebIDL;
             _ = try parseType(alloc, p) orelse return error.MalformedWebIDL;
             _ = try parseOptionalArgumentList(alloc, p) orelse return error.MalformedWebIDL;
-            try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+            try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
             return;
         }
         return null;
@@ -213,13 +213,13 @@ fn parseCallbackOrInterfaceOrMixin(alloc: std.mem.Allocator, p: *Parser) anyerro
 fn parseInterfaceRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = try parse_name(alloc, p) orelse return null;
     _ = try parseInheritance(alloc, p);
-    try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
     while (true) {
         _ = try parseExtendedAttributeList(alloc, p);
         _ = try parseInterfaceMember(alloc, p) orelse break;
     }
-    try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Partial ::
@@ -259,13 +259,13 @@ fn parsePartialInterfaceOrPartialMixin(alloc: std.mem.Allocator, p: *Parser) any
 //     (ExtendedAttributeList? PartialInterfaceMember)*
 fn parsePartialInterfaceRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = try parse_name(alloc, p) orelse return null;
-    try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
     while (true) {
         _ = try parseExtendedAttributeList(alloc, p);
         _ = try parsePartialInterfaceMember(alloc, p) orelse break;
     }
-    try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // InterfaceMember ::
@@ -307,7 +307,7 @@ fn parsePartialInterfaceMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?v
 // Inheritance ::
 //     : identifier
 fn parseInheritance(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.IdentifierIndex {
-    try parse_symbol(alloc, p, ':') orelse return null;
+    try parse_symbol(p, ':') orelse return null;
     return try parse_name(alloc, p) orelse return error.MalformedWebIDL;
 }
 
@@ -319,13 +319,13 @@ fn parseMixinRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = try parse_keyword(p, .mixin) orelse return null;
 
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
     while (true) {
         _ = try parseExtendedAttributeList(alloc, p);
         _ = try parseMixinMember(alloc, p) orelse break;
     }
-    try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // MixinMember ::
@@ -351,7 +351,7 @@ fn parseIncludesStatement(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = try parse_name(alloc, p) orelse return null;
     _ = try parse_keyword(p, .includes) orelse return error.MalformedWebIDL;
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    _ = try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    _ = try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Const ::
@@ -360,9 +360,9 @@ fn parseConst(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .@"const") orelse return null;
     _ = try parseConstType(alloc, p) orelse return error.MalformedWebIDL;
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '=') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '=') orelse return error.MalformedWebIDL;
     _ = try parseConstValue(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // ConstValue ::
@@ -442,7 +442,7 @@ fn parseAttributeRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .attribute) orelse return null;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
     _ = try parseAttributeName(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // AttributeName ::
@@ -469,12 +469,12 @@ fn parseDefaultValue(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parse_keyword(p, .undefined)) |_| return;
     if (try parse_keyword(p, .null)) |_| return;
 
-    if (try parse_symbol(alloc, p, '[')) |_| {
-        try parse_symbol(alloc, p, ']') orelse return error.MalformedWebIDL;
+    if (try parse_symbol(p, '[')) |_| {
+        try parse_symbol(p, ']') orelse return error.MalformedWebIDL;
         return;
     }
-    if (try parse_symbol(alloc, p, '{')) |_| {
-        try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
+    if (try parse_symbol(p, '{')) |_| {
+        try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
         return;
     }
     return null;
@@ -511,7 +511,7 @@ fn parseSpecial(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseOperationRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = try parseOperationName(alloc, p);
     _ = try parseOptionalArgumentList(alloc, p) orelse return null; //FIXME:
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // OperationName ::
@@ -531,7 +531,7 @@ fn parseArgumentList(alloc: std.mem.Allocator, p: *Parser) anyerror!void {
     try list.append(alloc, try parseArgument(alloc, p) orelse return);
 
     while (true) {
-        try parse_symbol(alloc, p, ',') orelse break;
+        try parse_symbol(p, ',') orelse break;
         try list.append(alloc, try parseArgument(alloc, p) orelse return error.MalformedWebIDL);
     }
 }
@@ -582,7 +582,7 @@ fn parseEllipsis(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseConstructor(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .constructor) orelse return null;
     _ = try parseOptionalArgumentList(alloc, p) orelse return error.MalformedWebIDL;
-    _ = try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    _ = try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Stringifier ::
@@ -593,7 +593,7 @@ fn parseConstructor(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseStringifier(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .stringifier) orelse return null;
 
-    if (try parse_symbol(alloc, p, ';')) |_| return;
+    if (try parse_symbol(p, ';')) |_| return;
 
     _ = try parse_keyword(p, .readonly);
     _ = try parseAttributeRest(alloc, p) orelse return error.MalformedWebIDL;
@@ -623,11 +623,11 @@ fn parseStaticMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     , TypeWithExtendedAttributes
 fn parseIterable(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .iterable) orelse return null;
-    try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
-    _ = if (try parse_symbol(alloc, p, ',') == null) null else (try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL);
-    try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    _ = if (try parse_symbol(p, ',') == null) null else (try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL);
+    try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // AsyncIterable ::
@@ -637,20 +637,20 @@ fn parseIterable(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseAsyncIterable(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .@"async") orelse return null;
     try parse_keyword(p, .iterable) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
-    _ = if (try parse_symbol(alloc, p, ',') == null) null else (try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL);
-    try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
+    _ = if (try parse_symbol(p, ',') == null) null else (try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL);
+    try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
     _ = try parseOptionalArgumentList(alloc, p);
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // OptionalArgumentList ::
 //     ( ArgumentList? )
 fn parseOptionalArgumentList(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    try parse_symbol(alloc, p, '(') orelse return null;
+    try parse_symbol(p, '(') orelse return null;
     _ = try parseArgumentList(alloc, p);
-    try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ')') orelse return error.MalformedWebIDL;
 }
 
 // ReadWriteMaplike ::
@@ -663,12 +663,12 @@ fn parseReadWriteMaplike(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     maplike < TypeWithExtendedAttributes , TypeWithExtendedAttributes > ;
 fn parseMaplikeRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .maplike) orelse return null;
-    try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ',') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ',') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // ReadWriteSetlike ::
@@ -681,10 +681,10 @@ fn parseReadWriteSetlike(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     setlike < TypeWithExtendedAttributes > ;
 fn parseSetlikeRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .setlike) orelse return null;
-    try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Namespace ::
@@ -694,7 +694,7 @@ fn parseSetlikeRest(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseNamespace(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .namespace) orelse return null;
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
 
     var list = std.ArrayListUnmanaged(void){};
     defer list.deinit(alloc);
@@ -703,8 +703,8 @@ fn parseNamespace(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         _ = try parseExtendedAttributeList(alloc, p);
         _ = try parseNamespaceMember(alloc, p) orelse break;
     }
-    try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // NamespaceMember ::
@@ -729,7 +729,7 @@ fn parseDictionary(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .dictionary) orelse return null;
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
     _ = try parseInheritance(alloc, p);
-    try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
 
     var list = std.ArrayListUnmanaged(void){};
     defer list.deinit(alloc);
@@ -737,8 +737,8 @@ fn parseDictionary(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     while (true) {
         _ = try parseDictionaryMember(alloc, p) orelse break;
     }
-    try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // DictionaryMember ::
@@ -752,13 +752,13 @@ fn parseDictionaryMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parse_keyword(p, .required)) |_| {
         _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
         _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-        try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+        try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
         return;
     }
     if (try parseType(alloc, p)) |_| {
         _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
         _ = try parseDefault(alloc, p);
-        try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+        try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
         return;
     }
     return null;
@@ -771,7 +771,7 @@ fn parseDictionaryMember(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parsePartialDictionary(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .dictionary) orelse return null;
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
 
     var list = std.ArrayListUnmanaged(void){};
     defer list.deinit(alloc);
@@ -779,14 +779,14 @@ fn parsePartialDictionary(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     while (true) {
         _ = try parseDictionaryMember(alloc, p) orelse break;
     }
-    try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Default ::
 //     = DefaultValue
 fn parseDefault(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    try parse_symbol(alloc, p, '=') orelse return null;
+    try parse_symbol(p, '=') orelse return null;
     _ = try parseDefaultValue(alloc, p) orelse return error.MalformedWebIDL;
 }
 
@@ -797,18 +797,18 @@ fn parseDefault(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseEnum(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .@"enum") orelse return null;
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '{') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '{') orelse return error.MalformedWebIDL;
 
     var list = std.ArrayListUnmanaged(w.StringIndex){};
     defer list.deinit(alloc);
     try list.append(alloc, try parse_string(alloc, p) orelse return error.MalformedWebIDL);
 
     while (true) {
-        try parse_symbol(alloc, p, ',') orelse break;
+        try parse_symbol(p, ',') orelse break;
         try list.append(alloc, try parse_string(alloc, p) orelse continue);
     }
-    try parse_symbol(alloc, p, '}') orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '}') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Typedef ::
@@ -817,7 +817,7 @@ fn parseTypedef(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .typedef) orelse return null;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ';') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ';') orelse return error.MalformedWebIDL;
 }
 
 // Type ::
@@ -827,7 +827,7 @@ fn parseType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     if (try parseSingleType(alloc, p)) |_| return;
 
     _ = try parseUnionType(alloc, p) orelse return null;
-    _ = try parse_symbol(alloc, p, '?');
+    _ = try parse_symbol(p, '?');
 }
 
 // TypeWithExtendedAttributes ::
@@ -851,7 +851,7 @@ fn parseSingleType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // UnionType ::
 //     ( UnionMemberType (or UnionMemberType)* )
 fn parseUnionType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    try parse_symbol(alloc, p, '(') orelse return null;
+    try parse_symbol(p, '(') orelse return null;
 
     var list = std.ArrayListUnmanaged(void){};
     defer list.deinit(alloc);
@@ -861,7 +861,7 @@ fn parseUnionType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         try parse_keyword(p, .@"or") orelse break;
         try list.append(alloc, try parseUnionMemberType(alloc, p) orelse return error.MalformedWebIDL);
     }
-    try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ')') orelse return error.MalformedWebIDL;
     if (list.items.len == 1) return error.MalformedWebIDL;
 }
 
@@ -902,10 +902,10 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
             if (try parse_keyword(p, .ObservableArray)) |_| break :blk2;
             break :blk;
         };
-        try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
+        try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
         _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
-        try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
-        _ = try parse_symbol(alloc, p, '?');
+        try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
+        _ = try parse_symbol(p, '?');
         return;
     };
     _ = blk: {
@@ -919,7 +919,7 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
         if (try parse_name(alloc, p)) |_| break :blk;
         return null;
     };
-    _ = try parse_symbol(alloc, p, '?');
+    _ = try parse_symbol(p, '?');
 }
 
 // PrimitiveType ::
@@ -1011,26 +1011,27 @@ fn parseStringType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 //     Promise < Type >
 fn parsePromiseType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .Promise) orelse return null;
-    try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
     _ = try parseType(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
 }
 
 // RecordType ::
 //     record < StringType , TypeWithExtendedAttributes >
 fn parseRecordType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .record) orelse return null;
-    try parse_symbol(alloc, p, '<') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
     _ = try parseStringType(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, ',') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ',') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
-    try parse_symbol(alloc, p, '>') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
 }
 
 // Null? ::
 //     ?
 fn parseNull(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    return parse_symbol(alloc, p, '?');
+    _ = alloc;
+    return parse_symbol(p, '?');
 }
 
 // BufferRelatedType ::
@@ -1070,17 +1071,17 @@ fn parseBufferRelatedType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // ExtendedAttributeList ::
 //     [ ExtendedAttribute (, ExtendedAttribute)* ]
 fn parseExtendedAttributeList(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
-    try parse_symbol(alloc, p, '[') orelse return null;
+    try parse_symbol(p, '[') orelse return null;
 
     var list = std.ArrayListUnmanaged(void){};
     defer list.deinit(alloc);
     try list.append(alloc, try parseExtendedAttribute(alloc, p) orelse return);
 
     while (true) {
-        try parse_symbol(alloc, p, ',') orelse break;
+        try parse_symbol(p, ',') orelse break;
         try list.append(alloc, try parseExtendedAttribute(alloc, p) orelse return error.MalformedWebIDL);
     }
-    try parse_symbol(alloc, p, ']') orelse return error.MalformedWebIDL;
+    try parse_symbol(p, ']') orelse return error.MalformedWebIDL;
 }
 
 // ExtendedAttribute ::
@@ -1174,32 +1175,32 @@ fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
         if (std.mem.eql(u8, name, "NoInterfaceObject")) try p.warnings.append(alloc, "Renamed to [LegacyNoInterfaceObject]; see https://github.com/whatwg/webidl/pull/870");
         if (std.mem.eql(u8, name, "Constructor")) try p.warnings.append(alloc, "Constructors should now be represented as a `constructor()` operation on the interface instead of a `[Constructor]` extended attribute; see https://webidl.spec.whatwg.org/#idl-constructors");
     }
-    if (try parse_symbol(alloc, p, '(')) |_| {
+    if (try parse_symbol(p, '(')) |_| {
         _ = try parseArgumentList(alloc, p);
-        _ = try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
+        _ = try parse_symbol(p, ')') orelse return error.MalformedWebIDL;
         return; //ExtendedAttributeArgList
     }
-    _ = try parse_symbol(alloc, p, '=') orelse {
+    _ = try parse_symbol(p, '=') orelse {
         return; //ExtendedAttributeNoArgs
     };
-    if (try parse_symbol(alloc, p, '*')) |_| {
+    if (try parse_symbol(p, '*')) |_| {
         return; //ExtendedAttributeWildcard
     }
-    if (try parse_symbol(alloc, p, '(')) |_| {
+    if (try parse_symbol(p, '(')) |_| {
         var list = std.ArrayListUnmanaged(w.IdentifierIndex){};
         defer list.deinit(alloc);
         try list.append(alloc, try parse_name(alloc, p) orelse return error.MalformedWebIDL);
         while (true) {
-            _ = try parse_symbol(alloc, p, ',') orelse break;
+            _ = try parse_symbol(p, ',') orelse break;
             try list.append(alloc, try parse_name(alloc, p) orelse return error.MalformedWebIDL);
         }
-        _ = try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
+        _ = try parse_symbol(p, ')') orelse return error.MalformedWebIDL;
         return; //ExtendedAttributeIdentList
     }
     _ = try parse_name(alloc, p) orelse return error.MalformedWebIDL;
-    if (try parse_symbol(alloc, p, '(')) |_| {
+    if (try parse_symbol(p, '(')) |_| {
         _ = try parseArgumentList(alloc, p);
-        _ = try parse_symbol(alloc, p, ')') orelse return error.MalformedWebIDL;
+        _ = try parse_symbol(p, ')') orelse return error.MalformedWebIDL;
         return; //ExtendedAttributeNamedArgList
     }
     return; //ExtendedAttributeIdent
@@ -1407,8 +1408,7 @@ const Keyword = enum {
     unsigned,
 };
 
-fn parse_symbol(alloc: std.mem.Allocator, p: *Parser, comptime c: u8) !?void {
-    _ = alloc;
+fn parse_symbol(p: *Parser, comptime c: u8) !?void {
     _ = try p.eatByte(c) orelse return null;
     try skip_whitespace(p);
 }
