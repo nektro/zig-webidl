@@ -58,7 +58,7 @@ const Adapter = struct {
 
 pub fn addIdent(p: *Parser, alloc: std.mem.Allocator, id: [2]usize) !w.IdentifierIndex {
     const start, const end = id;
-    return @enumFromInt(@intFromEnum(try p.addStr(alloc, p.parser.temp.items[start..end])));
+    return @enumFromInt(try intrusive_parser.Parser.AddStrGeneric(@intFromEnum(w.Value.Tag.identifier)).add(&p.parser, alloc, p.parser.temp.items[start..end]));
 }
 
 pub fn addIdentLiteral(p: *Parser, alloc: std.mem.Allocator, id: []const u8) !w.IdentifierIndex {
