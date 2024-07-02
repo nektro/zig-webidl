@@ -33,6 +33,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.short) }); // 7
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.long) }); // 9
     p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.long_long) }); // 11
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unrestricted_float) }); // 13
+    p.parser.data.appendSliceAssumeCapacity(&.{ @intFromEnum(Value.Tag.type), @intFromEnum(w.Type.unrestricted_double) }); // 15
     _ = try p.addStr(alloc, "");
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
@@ -933,14 +935,18 @@ fn parsePrimitiveType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // UnrestrictedFloatType ::
 //     unrestricted FloatType
 //     FloatType
-fn parseUnrestrictedFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
+fn parseUnrestrictedFloatType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
     _ = alloc;
     if (try parse_keyword(p, .unrestricted)) |_| {
-        _ = try parseFloatType(p) orelse return error.MalformedWebIDL;
-        return;
+        const t = try parseFloatType(p) orelse return error.MalformedWebIDL;
+        return switch (t) {
+            .float => .unrestricted_float,
+            .double => .unrestricted_double,
+            else => unreachable,
+        };
     }
-    _ = try parseFloatType(p) orelse return null;
-    return;
+    const t = try parseFloatType(p) orelse return null;
+    return t;
 }
 
 // FloatType ::

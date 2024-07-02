@@ -9,6 +9,8 @@ pub const ValueIndex = enum(u32) {
     type_short = 7,
     type_long = 9,
     type_long_long = 11,
+    type_unrestricted_float = 13,
+    type_unrestricted_double = 15,
 
     _,
 };
@@ -38,6 +40,9 @@ pub const TypeIndex = enum(u32) {
     short = 7,
     long = 9,
     long_long = 11,
+    unrestricted_float = 13,
+    unrestricted_double = 15,
+
     _,
 };
 
@@ -47,4 +52,6 @@ pub const Type = enum(u8) {
     short,
     long,
     long_long,
+    unrestricted_float,
+    unrestricted_double,
 };
