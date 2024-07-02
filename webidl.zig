@@ -917,7 +917,7 @@ fn parseDistinguishableType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void
         if (try parse_keyword(p, .symbol)) |_| break :blk;
         if (try parse_keyword(p, .undefined)) |_| break :blk;
         if (try parsePrimitiveType(p)) |_| break :blk;
-        if (try parseStringType(alloc, p)) |_| break :blk;
+        if (try parseStringType(p)) |_| break :blk;
         if (try parseBufferRelatedType(alloc, p)) |_| break :blk;
         if (try parseRecordType(alloc, p)) |_| break :blk;
         if (try parse_name(alloc, p)) |_| break :blk;
@@ -1002,8 +1002,7 @@ fn parseIntegerType(p: *Parser) anyerror!?w.TypeIndex {
 //     ByteString
 //     DOMString
 //     USVString
-fn parseStringType(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.TypeIndex {
-    _ = alloc;
+fn parseStringType(p: *Parser) anyerror!?w.TypeIndex {
     if (try parse_keyword(p, .ByteString)) |_| return .ByteString;
     if (try parse_keyword(p, .DOMString)) |_| return .DOMString;
     if (try parse_keyword(p, .USVString)) |_| return .USVString;
@@ -1024,7 +1023,7 @@ fn parsePromiseType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 fn parseRecordType(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     try parse_keyword(p, .record) orelse return null;
     try parse_symbol(p, '<') orelse return error.MalformedWebIDL;
-    _ = try parseStringType(alloc, p) orelse return error.MalformedWebIDL;
+    _ = try parseStringType(p) orelse return error.MalformedWebIDL;
     try parse_symbol(p, ',') orelse return error.MalformedWebIDL;
     _ = try parseTypeWithExtendedAttributes(alloc, p) orelse return error.MalformedWebIDL;
     try parse_symbol(p, '>') orelse return error.MalformedWebIDL;
