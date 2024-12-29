@@ -1,6 +1,7 @@
 const std = @import("std");
 const string = []const u8;
 const webidl = @import("webidl");
+const build_options = @import("build_options");
 
 // generated with `find .zigmod/deps/git/github.com/w3c/webidl2.js/test/syntax/idl/ -type f | sort`
 // updated as of 83fffdb10e196eb54af122b13f6386708a5609c6
@@ -75,7 +76,7 @@ test { try doValid("variadic-operations"); }
 // zig fmt: on
 
 fn doValid(comptime case: string) !void {
-    const path = ".zigmod/deps/git/github.com/w3c/webidl2.js/test/syntax/idl/" ++ case ++ ".webidl";
+    const path = build_options.webidl2_path ++ "/test/syntax/idl/" ++ case ++ ".webidl";
     const allocator = std.testing.allocator;
     var file = try std.fs.cwd().openFile(path, .{});
     defer file.close();
@@ -187,7 +188,7 @@ test { try doFail("unknown-generic"); }
 // zig fmt: on
 
 fn doFail(comptime case: string) !void {
-    const path = ".zigmod/deps/git/github.com/w3c/webidl2.js/test/invalid/idl/" ++ case ++ ".webidl";
+    const path = build_options.webidl2_path ++ "/test/invalid/idl/" ++ case ++ ".webidl";
     const allocator = std.testing.allocator;
     var file = try std.fs.cwd().openFile(path, .{});
     defer file.close();

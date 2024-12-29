@@ -5,13 +5,17 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const mode = b.option(std.builtin.Mode, "mode", "") orelse .Debug;
 
+    const options = b.addOptions();
+    options.addOption([]const u8, "webidl2_path", deps.dirs._w0j5achmwzgf);
+
     {
         const unit_tests = b.addTest(.{
-            .root_source_file = .{ .path = "test.zig" },
+            .root_source_file = b.path("test.zig"),
             .target = target,
             .optimize = mode,
         });
         deps.addAllTo(unit_tests);
+        unit_tests.root_module.addImport("build_options", options.createModule());
 
         const run_unit_tests = b.addRunArtifact(unit_tests);
         run_unit_tests.has_side_effects = true;
