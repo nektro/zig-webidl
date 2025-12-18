@@ -13,14 +13,14 @@ const Value = w.Value;
 const Error = error{ OutOfMemory, EndOfStream, MalformedWebIDL };
 
 // TODO use precise error return; https://github.com/ziglang/zig/issues/20177
-pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options: Parser.Options) anyerror!Document {
+pub fn parse(alloc: std.mem.Allocator, path: string, inreadable: anytype, options: Parser.Options) anyerror!Document {
     //
     const t = tracer.trace(@src(), "", .{});
     defer t.end();
 
     _ = path;
 
-    var p = Parser.init(alloc, inreader.any(), options);
+    var p = Parser.init(alloc, inreadable.anyReadable(), options);
     defer p.deinit();
 
     comptime std.debug.assert(@intFromEnum(Value.zero) == 0);

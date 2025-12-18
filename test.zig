@@ -2,6 +2,7 @@ const std = @import("std");
 const string = []const u8;
 const webidl = @import("webidl");
 const build_options = @import("build_options");
+const nfs = @import("nfs");
 
 // generated with `find .zigmod/deps/git/github.com/w3c/webidl2.js/test/syntax/idl/ -type f | sort`
 // updated as of 83fffdb10e196eb54af122b13f6386708a5609c6
@@ -78,9 +79,9 @@ test { try doValid("variadic-operations"); }
 fn doValid(comptime case: string) !void {
     const path = build_options.webidl2_path ++ "/test/syntax/idl/" ++ case ++ ".webidl";
     const allocator = std.testing.allocator;
-    var file = try std.fs.cwd().openFile(path, .{});
+    const file = try nfs.cwd().openFile(path, .{});
     defer file.close();
-    var doc = try webidl.parse(allocator, path, file.reader(), .{});
+    var doc = try webidl.parse(allocator, path, file, .{});
     defer doc.deinit(allocator);
 }
 
@@ -190,9 +191,9 @@ test { try doFail("unknown-generic"); }
 fn doFail(comptime case: string) !void {
     const path = build_options.webidl2_path ++ "/test/invalid/idl/" ++ case ++ ".webidl";
     const allocator = std.testing.allocator;
-    var file = try std.fs.cwd().openFile(path, .{});
+    const file = try nfs.cwd().openFile(path, .{});
     defer file.close();
-    var doc = webidl.parse(allocator, path, file.reader(), .{}) catch return;
+    var doc = webidl.parse(allocator, path, file, .{}) catch return;
     defer doc.deinit(allocator);
     if (doc.warnings.len > 0) return;
     return error.ShouldHaveFailed;

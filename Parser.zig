@@ -5,6 +5,8 @@ const w = @import("./types.zig");
 const Parser = @This();
 const tracer = @import("tracer");
 const intrusive_parser = @import("intrusive-parser");
+const nio = @import("nio");
+
 const Value = w.Value;
 const StringIndex = w.StringIndex;
 
@@ -13,7 +15,7 @@ warnings: std.ArrayListUnmanaged(string) = .{},
 
 max_depth: u16 = 0,
 
-pub fn init(allocator: std.mem.Allocator, any: std.io.AnyReader, options: Options) Parser {
+pub fn init(allocator: std.mem.Allocator, any: nio.AnyReadable, options: Options) Parser {
     return .{
         .parser = intrusive_parser.Parser.init(allocator, any, @intFromEnum(Value.Tag.string)),
         .max_depth = options.max_depth,
