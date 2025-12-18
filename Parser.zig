@@ -29,8 +29,6 @@ pub fn deinit(p: *Parser) void {
     p.warnings.deinit(p.parser.allocator);
 }
 
-pub usingnamespace intrusive_parser.Mixin(@This());
-
 // tag(u8) + len(u32) + bytes(N)
 pub fn addStr(p: *Parser, alloc: std.mem.Allocator, str: string) !StringIndex {
     const t = tracer.trace(@src(), "({d})", .{str.len});

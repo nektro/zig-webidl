@@ -63,8 +63,8 @@ pub fn parse(alloc: std.mem.Allocator, path: string, inreader: anytype, options:
 
     // const root = try parseDefinitionsPrecise(alloc, &p, @TypeOf(inreader).Error || Error);
     const root = try parseDefinitions(alloc, &p);
-    if (p.avail() > 0) {
-        std.log.warn("avail: {d}", .{p.avail()});
+    if (p.parser.avail() > 0) {
+        std.log.warn("avail: {d}", .{p.parser.avail()});
         std.log.warn("avail: {s}", .{p.parser.temp.items[p.parser.idx..]});
         return error.MalformedWebIDL;
     }
@@ -588,9 +588,9 @@ fn parseArgumentName(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.Identifie
 //     ...
 fn parseEllipsis(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
     _ = alloc;
-    _ = try p.eatByte('.') orelse return null;
-    _ = try p.eatByte('.') orelse return error.MalformedWebIDL;
-    _ = try p.eatByte('.') orelse return error.MalformedWebIDL;
+    _ = try p.parser.eatByte('.') orelse return null;
+    _ = try p.parser.eatByte('.') orelse return error.MalformedWebIDL;
+    _ = try p.parser.eatByte('.') orelse return error.MalformedWebIDL;
     try skip_whitespace(p);
 }
 
@@ -1220,8 +1220,8 @@ fn parseExtendedAttribute(alloc: std.mem.Allocator, p: *Parser) anyerror!?void {
 // integer     =  -?([1-9][0-9]*|0[Xx][0-9A-Fa-f]+|0[0-7]*)
 fn parse_integer(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.ValueIndex {
     const start = p.parser.idx;
-    _ = try p.eatByte('-');
-    if (try p.eatByte('0')) |_| {
+    _ = try p.parser.eatByte('-');
+    if (try p.parser.eatByte('0')) |_| {
         if (try p.eatAnyScalar("xX")) |_| {
             var at_least_one = false;
             while (true) {
@@ -1258,10 +1258,10 @@ fn parse_identifier(p: *Parser) anyerror!?struct { usize, usize, bool } {
     var start = p.parser.idx;
     var escaped = false;
 
-    if (try p.eatByte('_')) |_| {
+    if (try p.parser.eatByte('_')) |_| {
         start += 1;
         escaped = true;
-    } else if (try p.eatByte('-')) |_| {
+    } else if (try p.parser.eatByte('-')) |_| {
         //
     }
     _ = try p.eatAnyScalar("_-");
@@ -1275,8 +1275,8 @@ fn parse_identifier(p: *Parser) anyerror!?struct { usize, usize, bool } {
         cont = cont or try p.eatRange('0', '9') != null;
         cont = cont or try p.eatRange('A', 'Z') != null;
         cont = cont or try p.eatRange('a', 'z') != null;
-        cont = cont or try p.eatByte('_') != null;
-        cont = cont or try p.eatByte('-') != null;
+        cont = cont or try p.parser.eatByte('_') != null;
+        cont = cont or try p.parser.eatByte('-') != null;
     }
     const end = p.parser.idx;
     try skip_whitespace(p);
@@ -1285,10 +1285,10 @@ fn parse_identifier(p: *Parser) anyerror!?struct { usize, usize, bool } {
 
 // string      =  "[^"]*"
 fn parse_string(alloc: std.mem.Allocator, p: *Parser) anyerror!?w.StringIndex {
-    _ = try p.eatByte('"') orelse return null;
+    _ = try p.parser.eatByte('"') orelse return null;
     const start = p.parser.idx;
     while (true) {
-        if (try p.eatByte('"')) |_| break;
+        if (try p.parser.eatByte('"')) |_| break;
         p.parser.idx += 1;
     }
     const end = p.parser.idx;
@@ -1415,7 +1415,7 @@ const Keyword = enum {
 };
 
 fn parse_symbol(p: *Parser, comptime c: u8) !?void {
-    _ = try p.eatByte(c) orelse return null;
+    _ = try p.parser.eatByte(c) orelse return null;
     try skip_whitespace(p);
 }
 
