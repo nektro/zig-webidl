@@ -1,5 +1,6 @@
 const std = @import("std");
 const webidl = @import("webidl");
+const nfs = @import("nfs");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -7,7 +8,7 @@ pub fn main() !void {
     const allocator = gpa.allocator();
 
     const path = "main.webidl";
-    var file = try std.fs.cwd().openFile(path, .{});
+    var file = try nfs.cwd().openFile(path, .{});
     defer file.close();
 
     var doc = try webidl.parse(allocator, path, file.reader(), .{});

@@ -3,7 +3,7 @@ const deps = @import("./deps.zig");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
-    const mode = b.option(std.builtin.Mode, "mode", "") orelse .Debug;
+    const mode = b.option(std.builtin.OptimizeMode, "mode", "") orelse .Debug;
     const disable_llvm = b.option(bool, "disable_llvm", "use the non-llvm zig codegen") orelse false;
 
     const options = b.addOptions();
@@ -11,9 +11,11 @@ pub fn build(b: *std.Build) void {
 
     {
         const unit_tests = b.addTest(.{
-            .root_source_file = b.path("test.zig"),
-            .target = target,
-            .optimize = mode,
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("test.zig"),
+                .target = target,
+                .optimize = mode,
+            }),
         });
         deps.addAllTo(unit_tests);
         unit_tests.root_module.addImport("build_options", options.createModule());
@@ -31,9 +33,11 @@ pub fn build(b: *std.Build) void {
     {
         const exe = b.addExecutable(.{
             .name = "webidl-playground",
-            .root_source_file = b.path("main.zig"),
-            .target = target,
-            .optimize = mode,
+            .root_module = b.createModule(.{
+                .root_source_file = b.path("main.zig"),
+                .target = target,
+                .optimize = mode,
+            }),
         });
         deps.addAllTo(exe);
         exe.use_llvm = !disable_llvm;
