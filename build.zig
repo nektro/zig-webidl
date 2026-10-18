@@ -3,7 +3,7 @@ const deps = @import("./deps.zig");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
-    const mode = b.option(std.builtin.OptimizeMode, "mode", "") orelse .Debug;
+    const optimize = b.standardOptimizeOption(.{});
     const disable_llvm = b.option(bool, "disable_llvm", "use the non-llvm zig codegen") orelse false;
 
     const options = b.addOptions();
@@ -14,7 +14,7 @@ pub fn build(b: *std.Build) void {
             .root_module = b.createModule(.{
                 .root_source_file = b.path("test.zig"),
                 .target = target,
-                .optimize = mode,
+                .optimize = optimize,
             }),
         });
         deps.addAllTo(unit_tests);
@@ -36,7 +36,7 @@ pub fn build(b: *std.Build) void {
             .root_module = b.createModule(.{
                 .root_source_file = b.path("main.zig"),
                 .target = target,
-                .optimize = mode,
+                .optimize = optimize,
             }),
         });
         deps.addAllTo(exe);
@@ -44,12 +44,9 @@ pub fn build(b: *std.Build) void {
         exe.use_lld = !disable_llvm;
 
         const run_cmd = b.addRunArtifact(exe);
+        run_cmd.addPassthruArgs();
 
         run_cmd.step.dependOn(b.getInstallStep());
-
-        if (b.args) |args| {
-            run_cmd.addArgs(args);
-        }
 
         const run_step = b.step("run", "Run the app");
         run_step.dependOn(&run_cmd.step);
